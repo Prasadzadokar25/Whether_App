@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wether_report_api/view/home_screen.dart';
-
 import 'landing_page.dart';
-import 'navigation_bar.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    //double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(11, 12, 30, 1),
       body: SingleChildScrollView(
@@ -148,7 +145,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Route _createRoute() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => LandingPage(),
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          const LandingPage(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const beginScale = 0.8;
         const endScale = 1.0;
