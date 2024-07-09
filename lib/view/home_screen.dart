@@ -1,10 +1,13 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:fl_chart/fl_chart.dart';
 // import 'package:weather_app_youtube/bloc/weather_bloc_bloc.dart';
+
+/// Copyright (c) 2024 PDevelopmet
+///
+/// This `HomeScreen` widget serves as the main interface for displaying weather information,
+/// including current weather conditions, temperature, and additional weather details.
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,10 +17,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Widget getWeatherIcon(int code) {
     switch (code) {
       case >= 200 && < 300:
-        return Image.asset('assets/images/1.png');
+        return Image.asset(
+          'assets/images/1.png',
+        );
       case >= 300 && < 400:
         return Image.asset('assets/images/2.png');
       case >= 500 && < 600:
@@ -37,6 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
@@ -45,11 +62,38 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         systemOverlayStyle:
             const SystemUiOverlayStyle(statusBarBrightness: Brightness.dark),
+        centerTitle: true,
+        leading: const Icon(
+          Icons.menu_open_rounded,
+          size: 30,
+          color: Colors.white,
+        ),
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
+              Icons.location_pin,
+              color: Colors.white,
+              size: 23,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              "Pune",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 23,
+              ),
+            )
+          ],
+        ),
       ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(40, 1.2 * kToolbarHeight, 40, 20),
+        padding: const EdgeInsets.fromLTRB(30, 1.2 * kToolbarHeight, 30, 20),
         child: SizedBox(
-          height: MediaQuery.of(context).size.height,
+          height: height,
           child: Stack(
             children: [
               Align(
@@ -86,118 +130,123 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               if (true)
                 SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
+                  width: width,
+                  height: height,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        '📍 pune',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w300),
+                      const SizedBox(
+                        height: 30,
                       ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Good Morning',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      getWeatherIcon(
-                          100 /*state.weather.weatherConditionCode!*/),
-                      const Center(
-                        child: Text(
-                          "25",
-                          //'${state.weather.temperature!.celsius!.round()}°C',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 55,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      const Center(
-                        child: Text(
-                          "prasad",
-                          //	state.weather.weatherMain!.toUpperCase(),
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 25,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      const Center(
-                        child: Text(
-                          "25/25/25",
-                          //DateFormat('EEEE dd •').add_jm().format(state.weather.date!),
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w300),
-                        ),
-                      ),
-                      const SizedBox(height: 30),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Image.asset(
-                                'assets/images/11.png',
-                                scale: 8,
-                              ),
-                              const SizedBox(width: 5),
-                              const Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Sunrise',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300),
-                                  ),
-                                  SizedBox(height: 3),
-                                  Text(
-                                    "",
-                                    //DateFormat().add_jm().format(state.weather.sunrise!),
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                ],
-                              )
-                            ],
+                          Container(
+                            width: width * 0.36,
+                            alignment: Alignment.center,
+                            child: getWeatherIcon(
+                                600 /*state.weather.weatherConditionCode!*/),
                           ),
-                          Row(
+                          const SizedBox(
+                            width: 25,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Image.asset(
-                                'assets/images/12.png',
-                                scale: 8,
-                              ),
-                              const SizedBox(width: 5),
-                              const Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Sunset',
+                                    "25°",
+                                    //'${state.weather.temperature!.celsius!.round()}°C',
                                     style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300),
+                                      color: Colors.white,
+                                      fontSize: 60,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                  SizedBox(height: 3),
                                   Text(
-                                    "",
-                                    //DateFormat().add_jm().format(state.weather.sunset!),
+                                    "c",
+                                    //'${state.weather.temperature!.celsius!.round()}°C',
                                     style: TextStyle(
                                         color: Colors.white,
-                                        fontWeight: FontWeight.w700),
+                                        fontSize: 45,
+                                        fontWeight: FontWeight.w500),
                                   ),
                                 ],
-                              )
+                              ),
+                              SizedBox(
+                                width: width * 0.64 - 25 - 60,
+                                child: const Text(
+                                  "Thunderclouds  ",
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  //	state.weather.weatherMain!.toUpperCase(),
+                                  style: TextStyle(
+                                      color: Color.fromARGB(255, 225, 222, 222),
+                                      fontSize: 23,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              const Center(
+                                child: Text(
+                                  "25/25/25",
+                                  //DateFormat('EEEE dd •').add_jm().format(state.weather.date!),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
                             ],
                           ),
                         ],
+                      ),
+                      const SizedBox(height: 40),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                          color: Color.fromARGB(82, 44, 43, 43),
+                          borderRadius: BorderRadius.all(Radius.circular(18)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            otherInfoButton(
+                              label: "Wind",
+                              value: "13 km/h",
+                              icon: const Icon(
+                                Icons.air_rounded,
+                                color: Color.fromARGB(255, 241, 244, 174),
+                              ),
+                            ),
+                            Container(
+                              width: 1.6,
+                              height: 40,
+                              color: const Color.fromARGB(255, 177, 175, 175),
+                            ),
+                            otherInfoButton(
+                                label: "Humidity",
+                                value: "24%",
+                                icon: const Icon(
+                                  Icons.water_drop,
+                                  color: Color.fromARGB(255, 122, 217, 244),
+                                )),
+                            Container(
+                              width: 1.6,
+                              height: 40,
+                              color: const Color.fromARGB(255, 177, 175, 175),
+                            ),
+                            otherInfoButton(
+                              label: "Rain",
+                              value: "87%",
+                              icon: const Icon(
+                                Icons.water_damage_rounded,
+                                color: Color.fromARGB(255, 249, 249, 247),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 5.0),
@@ -267,6 +316,93 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget otherInfoButton({
+    required String label,
+    required String value,
+    required Icon icon,
+  }) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+            decoration: const BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Color.fromARGB(32, 236, 178, 3),
+                  blurRadius: 10,
+                )
+              ],
+            ),
+            child: icon),
+        Text(
+          value,
+          style:
+              const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+        ),
+        Text(
+          label,
+          style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Color.fromARGB(255, 170, 168, 168)),
+        ),
+      ],
+    );
+  }
+}
+
+class TemperatureChart extends StatelessWidget {
+  final List<double> hourlyTemperatures;
+
+  const TemperatureChart({super.key, required this.hourlyTemperatures});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: LineChart(
+        LineChartData(
+          gridData: const FlGridData(show: true),
+          titlesData: FlTitlesData(
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) {
+                  // final hour = value.toInt();
+                  return const Text('10');
+                },
+              ),
+            ),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) {
+                  return Text('$value°C');
+                },
+              ),
+            ),
+          ),
+          borderData: FlBorderData(
+            show: true,
+            border: Border.all(color: const Color(0xff37434d)),
+          ),
+          lineBarsData: [
+            LineChartBarData(
+              spots: hourlyTemperatures
+                  .asMap()
+                  .entries
+                  .map((e) => FlSpot(e.key.toDouble(), e.value))
+                  .toList(),
+              isCurved: true,
+              color: Colors.blue,
+              barWidth: 4,
+              belowBarData: BarAreaData(show: true),
+            ),
+          ],
         ),
       ),
     );

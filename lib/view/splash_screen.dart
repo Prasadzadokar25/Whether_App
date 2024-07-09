@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:wether_report_api/view/home_screen.dart';
+
+import 'landing_page.dart';
+import 'navigation_bar.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -23,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             children: [
               SizedBox(
-                height: height * 0.24,
+                height: height * 0.21,
               ),
               Container(
                 width: double.infinity,
@@ -32,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   children: [
                     SizedBox(
                       width: double.infinity,
-                      height: height * 0.2,
+                      height: height * 0.24,
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -47,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                     boxShadow: [
                                       BoxShadow(
                                           color:
-                                              Color.fromARGB(165, 255, 193, 7),
+                                              Color.fromARGB(218, 255, 193, 7),
                                           blurRadius: 80,
                                           spreadRadius: 18),
                                     ],
@@ -83,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       alignment: Alignment.center,
                       child: Image.asset(
                         "assets/images/cloud1.png",
-                        height: height * 0.31,
+                        height: 270,
                       ),
                     ),
                   ],
@@ -112,7 +113,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(
-                height: height * 0.17,
+                height: height * 0.13,
               ),
               Padding(
                 padding: const EdgeInsets.all(10),
@@ -147,8 +148,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Route _createRoute() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          const HomeScreen(),
+      pageBuilder: (context, animation, secondaryAnimation) => LandingPage(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const beginScale = 0.8;
         const endScale = 1.0;
@@ -169,22 +169,6 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         );
       },
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home Page'),
-      ),
-      body: const Center(
-        child: Text('Welcome to the Home Page!'),
-      ),
     );
   }
 }
