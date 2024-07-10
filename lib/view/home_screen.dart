@@ -1,7 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/widgets.dart';
+
+import 'sunpostion.dart';
 // import 'package:weather_app_youtube/bloc/weather_bloc_bloc.dart';
 
 /// Copyright (c) 2024 PDevelopmet
@@ -55,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color.fromARGB(255, 19, 19, 19),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -90,231 +94,345 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(30, 1.2 * kToolbarHeight, 30, 20),
-        child: SizedBox(
-          height: height,
-          child: Stack(
-            children: [
-              Align(
-                alignment: const AlignmentDirectional(3, -0.3),
-                child: Container(
-                  height: 300,
-                  width: 300,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle, color: Colors.deepPurple),
+      body: SizedBox(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(25, 1.2 * kToolbarHeight, 25, 20),
+          child: SizedBox(
+            //height: height,
+            child: Stack(
+              children: [
+                // Align(
+                //   alignment: const AlignmentDirectional(3, -0.3),
+                //   child: Container(
+                //     height: 300,
+                //     width: 300,
+                //     decoration: const BoxDecoration(
+                //         shape: BoxShape.circle, color: Colors.deepPurple),
+                //   ),
+                // ),
+                // Align(
+                //   alignment: const AlignmentDirectional(-3, -0.3),
+                //   child: Container(
+                //     height: 300,
+                //     width: 300,
+                //     decoration: const BoxDecoration(
+                //         shape: BoxShape.circle, color: Color(0xFF673AB7)),
+                //   ),
+                // ),
+                Align(
+                  alignment: const AlignmentDirectional(0, -0.85),
+                  child: Container(
+                    height: 220,
+                    width: 220,
+                    decoration: const BoxDecoration(
+                        color: Color.fromARGB(95, 232, 217, 12)),
+                  ),
                 ),
-              ),
-              Align(
-                alignment: const AlignmentDirectional(-3, -0.3),
-                child: Container(
-                  height: 300,
-                  width: 300,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle, color: Color(0xFF673AB7)),
+                BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
+                  child: Container(
+                    decoration: const BoxDecoration(color: Colors.transparent),
+                  ),
                 ),
-              ),
-              Align(
-                alignment: const AlignmentDirectional(0, -1.2),
-                child: Container(
-                  height: 300,
-                  width: 600,
-                  decoration: const BoxDecoration(color: Color(0xFFFFAB40)),
-                ),
-              ),
-              BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
-                child: Container(
-                  decoration: const BoxDecoration(color: Colors.transparent),
-                ),
-              ),
-              if (true)
-                SizedBox(
-                  width: width,
-                  height: height,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Row(
+                if (true)
+                  SingleChildScrollView(
+                    child: SizedBox(
+                      width: width,
+                      //height: height,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            width: width * 0.36,
-                            alignment: Alignment.center,
-                            child: getWeatherIcon(
-                                600 /*state.weather.weatherConditionCode!*/),
-                          ),
                           const SizedBox(
-                            width: 25,
+                            height: 30,
                           ),
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              Container(
+                                height: height * 0.21,
+                                alignment: Alignment.center,
+                                child: getWeatherIcon(
+                                    100 /*state.weather.weatherConditionCode!*/),
+                              ),
+                              const SizedBox(
+                                width: 25,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    "25°",
-                                    //'${state.weather.temperature!.celsius!.round()}°C',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 60,
-                                      fontWeight: FontWeight.w600,
+                                  const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        " 25°",
+                                        //'${state.weather.temperature!.celsius!.round()}°C',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 75,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      // Text(
+                                      //   "c",
+                                      //   //'${state.weather.temperature!.celsius!.round()}°C',
+                                      //   style: TextStyle(
+                                      //       color: Colors.white,
+                                      //       fontSize: 45,
+                                      //       fontWeight: FontWeight.w500),
+                                      // ),
+                                    ],
+                                  ),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: width * 0.64 - 25 - 60,
+                                    child: const Text(
+                                      "Thunderclouds",
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      //	state.weather.weatherMain!.toUpperCase(),
+                                      style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 225, 222, 222),
+                                          fontSize: 23,
+                                          fontWeight: FontWeight.w500),
                                     ),
                                   ),
-                                  Text(
-                                    "c",
-                                    //'${state.weather.temperature!.celsius!.round()}°C',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 45,
-                                        fontWeight: FontWeight.w500),
-                                  ),
+                                  const SizedBox(height: 5),
+                                  // const Center(
+                                  //   child: Text(
+                                  //     "25 / june",
+                                  //     //DateFormat('EEEE dd •').add_jm().format(state.weather.date!),
+                                  //     style: TextStyle(
+                                  //         color: Colors.white,
+                                  //         fontSize: 16,
+                                  //         fontWeight: FontWeight.w400),
+                                  //   ),
+                                  // ),
                                 ],
-                              ),
-                              SizedBox(
-                                width: width * 0.64 - 25 - 60,
-                                child: const Text(
-                                  "Thunderclouds  ",
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  //	state.weather.weatherMain!.toUpperCase(),
-                                  style: TextStyle(
-                                      color: Color.fromARGB(255, 225, 222, 222),
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              const Center(
-                                child: Text(
-                                  "25/25/25",
-                                  //DateFormat('EEEE dd •').add_jm().format(state.weather.date!),
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400),
-                                ),
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 40),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                          color: Color.fromARGB(82, 44, 43, 43),
-                          borderRadius: BorderRadius.all(Radius.circular(18)),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            otherInfoButton(
-                              label: "Wind",
-                              value: "13 km/h",
-                              icon: const Icon(
-                                Icons.air_rounded,
-                                color: Color.fromARGB(255, 241, 244, 174),
-                              ),
+                          const SizedBox(height: 30),
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(82, 44, 43, 43),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(18)),
                             ),
-                            Container(
-                              width: 1.6,
-                              height: 40,
-                              color: const Color.fromARGB(255, 177, 175, 175),
-                            ),
-                            otherInfoButton(
-                                label: "Humidity",
-                                value: "24%",
-                                icon: const Icon(
-                                  Icons.water_drop,
-                                  color: Color.fromARGB(255, 122, 217, 244),
-                                )),
-                            Container(
-                              width: 1.6,
-                              height: 40,
-                              color: const Color.fromARGB(255, 177, 175, 175),
-                            ),
-                            otherInfoButton(
-                              label: "Rain",
-                              value: "87%",
-                              icon: const Icon(
-                                Icons.water_damage_rounded,
-                                color: Color.fromARGB(255, 249, 249, 247),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 5.0),
-                        child: Divider(
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(children: [
-                            Image.asset(
-                              'assets/images/13.png',
-                              scale: 8,
-                            ),
-                            const SizedBox(width: 5),
-                            const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Text(
-                                  'Temp Max',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w300),
+                                otherInfoButton(
+                                  label: "Wind",
+                                  value: "13 km/h",
+                                  icon: const Icon(
+                                    Icons.air_rounded,
+                                    color: Color.fromARGB(255, 241, 244, 174),
+                                  ),
                                 ),
-                                SizedBox(height: 3),
-                                Text(
-                                  "",
-                                  //"${state.weather.tempMax!.celsius!.round()} °C",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700),
+                                Container(
+                                  width: 1.6,
+                                  height: 40,
+                                  color:
+                                      const Color.fromARGB(255, 177, 175, 175),
+                                ),
+                                otherInfoButton(
+                                    label: "Humidity",
+                                    value: "24%",
+                                    icon: const Icon(
+                                      Icons.water_drop,
+                                      color: Color.fromARGB(255, 122, 217, 244),
+                                    )),
+                                Container(
+                                  width: 1.6,
+                                  height: 40,
+                                  color:
+                                      const Color.fromARGB(255, 177, 175, 175),
+                                ),
+                                otherInfoButton(
+                                  label: "Rain",
+                                  value: "87%",
+                                  icon: const Icon(
+                                    Icons.water_damage_rounded,
+                                    color: Color.fromARGB(255, 249, 249, 247),
+                                  ),
                                 ),
                               ],
-                            )
-                          ]),
-                          Row(children: [
-                            Image.asset(
-                              'assets/images/14.png',
-                              scale: 8,
                             ),
-                            const SizedBox(width: 5),
-                            const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                          ),
+                          const SizedBox(height: 15),
+                          Container(
+                            height: 200,
+                            width: width,
+                            decoration: const BoxDecoration(
+                                //color: Color.fromARGB(77, 50, 50, 50)
+                                ),
+                            child: Column(
                               children: [
-                                Text(
-                                  'Temp Min',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w300),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Today",
+                                      style: TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.7,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    TextButton(
+                                      onPressed: () {},
+                                      child: const Row(
+                                        children: [
+                                          Text(
+                                            "7 days ",
+                                            style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 140, 139, 139),
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: 0.7,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          Icon(
+                                            Icons.arrow_forward_ios_sharp,
+                                            color: Color.fromARGB(
+                                                255, 140, 139, 139),
+                                            size: 17,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(height: 3),
-                                Text(
-                                  "25",
-                                  //"${state.weather.tempMin!.celsius!.round()} °C",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700),
-                                ),
+                                SizedBox(
+                                  height: 135,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 15,
+                                    itemBuilder: (context, index) {
+                                      return Center(
+                                        child: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          margin: const EdgeInsets.only(
+                                              right: 16.7),
+                                          height: (index == 1) ? 106 : 100,
+                                          width: (index == 1) ? 72 : 67.5,
+                                          decoration: (index == 1)
+                                              ? const BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    colors: [
+                                                      Color.fromARGB(
+                                                          255, 4, 138, 248),
+                                                      Color.fromARGB(
+                                                          255, 122, 195, 255)
+                                                    ],
+                                                    begin:
+                                                        Alignment.bottomRight,
+                                                    end: Alignment.topLeft,
+                                                  ),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Color.fromARGB(
+                                                          119, 22, 146, 247),
+                                                      blurRadius: 10,
+                                                    )
+                                                  ],
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(26),
+                                                  ),
+                                                  // border: Border.all(
+                                                  //   color: const Color.fromARGB(
+                                                  //       255, 60, 57, 57),
+                                                  // ),
+                                                )
+                                              : BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                      50, 102, 102, 102),
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                    Radius.circular(25),
+                                                  ),
+                                                  border: Border.all(
+                                                    color: const Color.fromARGB(
+                                                        255, 60, 57, 57),
+                                                  ),
+                                                ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "25°",
+                                                style: TextStyle(
+                                                  color: (index == 1)
+                                                      ? Colors.white
+                                                      : const Color.fromARGB(
+                                                          255, 192, 190, 190),
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              Container(
+                                                decoration: const BoxDecoration(
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Color.fromARGB(
+                                                          53, 224, 235, 101),
+                                                      blurRadius: 15,
+                                                    )
+                                                  ],
+                                                ),
+                                                child: Image.asset(
+                                                  'assets/images/${index % 9 + 1}.png',
+                                                  height: 30,
+                                                ),
+                                              ),
+                                              Text(
+                                                "11:00",
+                                                style: TextStyle(
+                                                  color: (index == 1)
+                                                      ? Colors.white
+                                                      : const Color.fromARGB(
+                                                          255, 192, 190, 190),
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 11,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
                               ],
-                            )
-                          ])
+                            ),
+                          ),
+                          Container(
+                            height: 150,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 40,
+                              vertical: 20,
+                            ),
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(82, 44, 43, 43),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(18)),
+                            ),
+                            alignment: Alignment.center,
+                            child: SunPositionScreen(),
+                          )
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -330,15 +448,16 @@ class _HomeScreenState extends State<HomeScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-            decoration: const BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Color.fromARGB(32, 236, 178, 3),
-                  blurRadius: 10,
-                )
-              ],
-            ),
-            child: icon),
+          decoration: const BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Color.fromARGB(25, 236, 178, 3),
+                blurRadius: 10,
+              )
+            ],
+          ),
+          child: icon,
+        ),
         Text(
           value,
           style:
