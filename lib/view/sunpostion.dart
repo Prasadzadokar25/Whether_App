@@ -55,7 +55,7 @@ class _SunPositionScreenState extends State<SunPositionScreen> {
             children: [
               Row(
                 children: [
-                  const SizedBox(width: 15),
+                  const SizedBox(width: 10),
                   Container(
                     height: 25,
                     width: MediaQuery.of(context).size.width - 100 - 25,
@@ -73,46 +73,64 @@ class _SunPositionScreenState extends State<SunPositionScreen> {
                   )
                 ],
               ),
+              if (sunPosition >= 0)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width:
+                          (MediaQuery.of(context).size.width - 100 - 5 - 20) *
+                              sunPosition,
+                    ),
+                    GestureDetector(
+                      onLongPress: () {},
+                      child: Container(
+                        height: 22,
+                        width: 22,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color.fromARGB(255, 249, 86, 4),
+                                Color.fromARGB(255, 249, 176, 140),
+                                Color.fromARGB(255, 255, 255, 255)
+                              ],
+                              begin: Alignment.bottomRight,
+                              end: Alignment.topLeft,
+                            ),
+                            boxShadow: [
+                              if (sunPosition < 0.91 && sunPosition > 0.085)
+                                const BoxShadow(
+                                  color: Color.fromARGB(255, 255, 173, 41),
+                                  blurRadius: 16,
+                                  spreadRadius: 1,
+                                )
+                            ]),
+                      ),
+                    ),
+                    // const Icon(
+                    //   Icons.sunny,
+                    //   size: 25,
+                    //   color: Color.fromARGB(255, 255, 168, 7),
+                    // )
+                  ],
+                ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    width: (MediaQuery.of(context).size.width - 100 - 5 - 20) *
-                        sunPosition,
-                  ),
                   Container(
-                    height: 22,
-                    width: 22,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: const LinearGradient(
-                          colors: [
-                            Color.fromARGB(255, 249, 86, 4),
-                            Color.fromARGB(255, 249, 176, 140),
-                            Color.fromARGB(255, 255, 255, 255)
-                          ],
-                          begin: Alignment.bottomRight,
-                          end: Alignment.topLeft,
-                        ),
+                    height: 30,
+                    width: 20,
+                    decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 25, 25, 25),
                         boxShadow: [
-                          if (sunPosition < 0.91)
-                            const BoxShadow(
-                              color: Color.fromARGB(255, 255, 173, 41),
-                              blurRadius: 16,
-                              spreadRadius: 1,
-                            )
+                          BoxShadow(
+                            color: Color.fromARGB(255, 25, 25, 25),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                          )
                         ]),
                   ),
-                  // const Icon(
-                  //   Icons.sunny,
-                  //   size: 25,
-                  //   color: Color.fromARGB(255, 255, 168, 7),
-                  // )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
                   Container(
                     height: 30,
                     width: 25,
@@ -130,9 +148,7 @@ class _SunPositionScreenState extends State<SunPositionScreen> {
               )
             ],
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -161,46 +177,93 @@ class _SunPositionScreenState extends State<SunPositionScreen> {
       ),
     );
   }
+}
 
-  String convertInto24Hour(String time) {
-    if (time.endsWith("PM") || time.endsWith('pm')) {
-      String newTime = time.replaceAll("pm", "");
-      String newTime2 = newTime.replaceAll("PM", "");
-      List<String> parts = newTime2.split(":");
-      int hour = int.parse(parts[0]) + 12;
-      return "$hour:${parts[1]}";
-    } else if (time.endsWith("AM") || time.endsWith('am')) {
-      String newTime = time.replaceAll("AM", "");
-      String newTime2 = newTime.replaceAll("am", "");
+class MoonLocation extends StatefulWidget {
+  const MoonLocation({super.key});
 
-      return newTime2;
-    }
-    return time;
-  }
+  @override
+  State<MoonLocation> createState() => _MoonLocationState();
+}
 
-  Widget getSunRiseSunSetLabel({required String lable, required String time}) {
-    time = convertInto24Hour(time);
-    return Column(
-      children: [
-        Text(
-          lable,
-          style: const TextStyle(
-            color: Color.fromARGB(255, 140, 139, 139),
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.7,
-            fontSize: 12,
+class _MoonLocationState extends State<MoonLocation> {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              getSunRiseSunSetLabel(
+                lable: "Moonrise",
+                time: WhetherInheritedWidget.of(context)
+                    .whetherData
+                    .forecast!
+                    .forecastday![0]
+                    .astro!
+                    .moonrise!,
+              ),
+              getSunRiseSunSetLabel(
+                lable: "Moonrise",
+                time: WhetherInheritedWidget.of(context)
+                    .whetherData
+                    .forecast!
+                    .forecastday![0]
+                    .astro!
+                    .moonset!,
+              ),
+            ],
           ),
-        ),
-        Text(
-          time,
-          style: const TextStyle(
-            color: Color.fromARGB(255, 245, 247, 248),
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.7,
-            fontSize: 18,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
+}
+
+String convertInto24Hour(String time) {
+  if (time.endsWith("PM") || time.endsWith('pm')) {
+    String newTime = time.replaceAll("pm", "");
+    String newTime2 = newTime.replaceAll("PM", "");
+    List<String> parts = newTime2.split(":");
+    int hour = int.parse(parts[0]) + 12;
+    if (hour >= 24) {
+      return "00:${parts[1]}";
+    }
+    return "$hour:${parts[1]}";
+  } else if (time.endsWith("AM") || time.endsWith('am')) {
+    String newTime = time.replaceAll("AM", "");
+    String newTime2 = newTime.replaceAll("am", "");
+
+    return newTime2;
+  }
+  return time;
+}
+
+Widget getSunRiseSunSetLabel({required String lable, required String time}) {
+  time = convertInto24Hour(time);
+  return Column(
+    children: [
+      Text(
+        lable,
+        style: const TextStyle(
+          color: Color.fromARGB(255, 140, 139, 139),
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.7,
+          fontSize: 12,
+        ),
+      ),
+      Text(
+        time,
+        style: const TextStyle(
+          color: Color.fromARGB(255, 245, 247, 248),
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.7,
+          fontSize: 18,
+        ),
+      ),
+    ],
+  );
 }

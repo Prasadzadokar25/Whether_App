@@ -22,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  double hourDataContainerWidth = 67;
   final ScrollController _scrollController = ScrollController();
 
   Widget getWeatherIcon(int code) {
@@ -50,21 +51,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
     _fetchWeatherData();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollToCurrentHour();
-    });
   }
 
   DateTime currentTime = DateTime.now();
   void _scrollToCurrentHour() {
     int currentHour = currentTime.hour;
-    double itemWidth =
-        100.0; // Adjust this value to match the width of your list items
+    double itemWidth = hourDataContainerWidth;
 
     _scrollController.animateTo(
-      currentHour * itemWidth,
-      duration: Duration(seconds: 1),
+      currentHour * itemWidth * 1.1,
+      duration: Duration(seconds: 4),
       curve: Curves.easeInOut,
     );
   }
@@ -78,6 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
       log("${WhetherInheritedWidget.of(context).whetherData.toJson()['current']['temp_c']}");
     });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToCurrentHour();
+    });
     setState(() {});
   }
 
@@ -85,10 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return (WhetherInheritedWidget.of(context)
-                .whetherData
-                .toJson()['current'] !=
-            null)
+    return (WhetherInheritedWidget.of(context).whetherData.current != null)
         ? Scaffold(
             backgroundColor: const Color.fromARGB(255, 19, 19, 19),
             extendBodyBehindAppBar: true,
@@ -118,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     "Pune",
                     style: TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                       fontSize: 23,
                     ),
                   )
@@ -127,8 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             body: SizedBox(
               child: Padding(
-                padding:
-                    const EdgeInsets.fromLTRB(20, 1.2 * kToolbarHeight, 20, 10),
+                padding: const EdgeInsets.fromLTRB(20, kToolbarHeight, 20, 10),
                 child: SizedBox(
                   //height: height,
                   child: Stack(
@@ -397,7 +394,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 width: (index ==
                                                         currentTime.hashCode)
                                                     ? 72
-                                                    : 67.5,
+                                                    : hourDataContainerWidth,
                                                 decoration: (index ==
                                                         currentTime.hour)
                                                     ? const BoxDecoration(
@@ -457,7 +454,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     Text(
                                                       "${WhetherInheritedWidget.of(context).whetherData.forecast!.forecastday![0].hour![index].tempC!.round()}°",
                                                       style: TextStyle(
-                                                        color: (index == 1)
+                                                        color: (index ==
+                                                                currentTime
+                                                                    .hour)
                                                             ? Colors.white
                                                             : const Color
                                                                 .fromARGB(255,
@@ -497,7 +496,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           .time!
                                                           .split(" ")[1],
                                                       style: TextStyle(
-                                                        color: (index == 1)
+                                                        color: (index ==
+                                                                currentTime
+                                                                    .hour)
                                                             ? Colors.white
                                                             : const Color
                                                                 .fromARGB(255,
@@ -545,7 +546,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .astro!
                                             .sunset!),
                                   ),
-                                )
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  height: 105,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 30,
+                                    vertical: 10,
+                                  ),
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromARGB(82, 44, 43, 43),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(18)),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: const MoonLocation(),
+                                ),
                               ],
                             ),
                           ),
