@@ -1,10 +1,7 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:wether_report_api/view/splash_screen.dart';
-
 import 'Model/whether_data_model.dart';
-import 'view/loadding_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,6 +22,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class WhetherInheritedWidget extends InheritedWidget {
   WhetherData whetherData;
   WhetherInheritedWidget({

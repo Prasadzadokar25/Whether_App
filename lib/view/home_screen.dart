@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:intl/intl.dart';
 import 'package:wether_report_api/main.dart';
 import '../Controller/feach_data.dart';
 import '../Model/whether_data_model.dart';
@@ -53,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _fetchWeatherData() async {
+    log("here");
     final whetherData = await FeachData.feachWetherInfo();
     setState(() {
       WhetherInheritedWidget.of(context).whetherData =
@@ -480,7 +480,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                                 Container(
-                                  height: 100,
+                                  height: 105,
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 30,
                                     vertical: 10,

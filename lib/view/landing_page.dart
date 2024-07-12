@@ -1,9 +1,4 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:wether_report_api/Controller/feach_data.dart';
-import 'package:wether_report_api/Model/whether_data_model.dart';
-import 'package:wether_report_api/main.dart';
 import 'package:wether_report_api/view/home_screen.dart';
 import 'package:wether_report_api/view/seach_page.dart';
 import 'package:wether_report_api/view/thermal_view_page.dart';
