@@ -22,6 +22,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final ScrollController _scrollController = ScrollController();
+
   Widget getWeatherIcon(int code) {
     switch (code) {
       case >= 200 && < 300:
@@ -49,6 +51,22 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _fetchWeatherData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToCurrentHour();
+    });
+  }
+
+  DateTime currentTime = DateTime.now();
+  void _scrollToCurrentHour() {
+    int currentHour = currentTime.hour;
+    double itemWidth =
+        100.0; // Adjust this value to match the width of your list items
+
+    _scrollController.animateTo(
+      currentHour * itemWidth,
+      duration: Duration(seconds: 1),
+      curve: Curves.easeInOut,
+    );
   }
 
   Future<void> _fetchWeatherData() async {
@@ -183,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               alignment: Alignment.center,
                                               height: 100,
                                               child: Text(
-                                                  "${WhetherInheritedWidget.of(context).whetherData.toJson()['current']['temp_c'].round()}°",
+                                                  "${WhetherInheritedWidget.of(context).whetherData.current!.tempC!.round()}°",
 
                                                   //'${state.weather.temperature!.celsius!.round()}°C',
                                                   style: const TextStyle(
@@ -356,8 +374,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                       SizedBox(
                                         height: 135,
                                         child: ListView.builder(
+                                          controller: _scrollController,
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: 15,
+                                          itemCount:
+                                              WhetherInheritedWidget.of(context)
+                                                  .whetherData
+                                                  .forecast!
+                                                  .forecastday![0]
+                                                  .hour!
+                                                  .length,
                                           itemBuilder: (context, index) {
                                             return Center(
                                               child: Container(
@@ -366,9 +391,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 margin: const EdgeInsets.only(
                                                     right: 16.7),
                                                 height:
-                                                    (index == 1) ? 106 : 100,
-                                                width: (index == 1) ? 72 : 67.5,
-                                                decoration: (index == 1)
+                                                    (index == currentTime.hour)
+                                                        ? 106
+                                                        : 100,
+                                                width: (index ==
+                                                        currentTime.hashCode)
+                                                    ? 72
+                                                    : 67.5,
+                                                decoration: (index ==
+                                                        currentTime.hour)
                                                     ? const BoxDecoration(
                                                         gradient:
                                                             LinearGradient(
@@ -424,7 +455,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           .spaceBetween,
                                                   children: [
                                                     Text(
-                                                      "25°",
+                                                      "${WhetherInheritedWidget.of(context).whetherData.forecast!.forecastday![0].hour![index].tempC!.round()}°",
                                                       style: TextStyle(
                                                         color: (index == 1)
                                                             ? Colors.white
@@ -457,7 +488,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      "11:00",
+                                                      WhetherInheritedWidget.of(
+                                                              context)
+                                                          .whetherData
+                                                          .forecast!
+                                                          .forecastday![0]
+                                                          .hour![index]
+                                                          .time!
+                                                          .split(" ")[1],
                                                       style: TextStyle(
                                                         color: (index == 1)
                                                             ? Colors.white

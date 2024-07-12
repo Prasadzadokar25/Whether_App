@@ -97,9 +97,10 @@ class _SunPositionScreenState extends State<SunPositionScreen> {
                         boxShadow: [
                           if (sunPosition < 0.91)
                             const BoxShadow(
-                                color: Color.fromARGB(255, 255, 173, 41),
-                                blurRadius: 16,
-                                spreadRadius: 1)
+                              color: Color.fromARGB(255, 255, 173, 41),
+                              blurRadius: 16,
+                              spreadRadius: 1,
+                            )
                         ]),
                   ),
                   // const Icon(
@@ -119,9 +120,10 @@ class _SunPositionScreenState extends State<SunPositionScreen> {
                         color: Color.fromARGB(255, 25, 25, 25),
                         boxShadow: [
                           BoxShadow(
-                              color: Color.fromARGB(255, 25, 25, 25),
-                              blurRadius: 5,
-                              spreadRadius: 2)
+                            color: Color.fromARGB(255, 25, 25, 25),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                          )
                         ]),
                   )
                 ],
@@ -151,8 +153,7 @@ class _SunPositionScreenState extends State<SunPositionScreen> {
                     .forecast!
                     .forecastday![0]
                     .astro!
-                    .sunset!
-                    .split(' ')[0],
+                    .sunset!,
               ),
             ],
           ),
@@ -161,7 +162,24 @@ class _SunPositionScreenState extends State<SunPositionScreen> {
     );
   }
 
+  String convertInto24Hour(String time) {
+    if (time.endsWith("PM") || time.endsWith('pm')) {
+      String newTime = time.replaceAll("pm", "");
+      String newTime2 = newTime.replaceAll("PM", "");
+      List<String> parts = newTime2.split(":");
+      int hour = int.parse(parts[0]) + 12;
+      return "$hour:${parts[1]}";
+    } else if (time.endsWith("AM") || time.endsWith('am')) {
+      String newTime = time.replaceAll("AM", "");
+      String newTime2 = newTime.replaceAll("am", "");
+
+      return newTime2;
+    }
+    return time;
+  }
+
   Widget getSunRiseSunSetLabel({required String lable, required String time}) {
+    time = convertInto24Hour(time);
     return Column(
       children: [
         Text(
