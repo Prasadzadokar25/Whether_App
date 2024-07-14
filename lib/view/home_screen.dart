@@ -3,10 +3,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:wether_report_api/main.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:wether_report_api/Controller/whether_inherited_widget.dart';
+import 'package:wether_report_api/Model/whether_data.dart';
+import 'package:wether_report_api/view/whetheranimation.dart';
 import '../Controller/feach_data.dart';
-import '../Model/whether_data_model.dart';
-import 'sunpostion.dart';
+import 'astroposition.dart';
 // import 'package:weather_app_youtube/bloc/weather_bloc_bloc.dart';
 
 /// Copyright (c) 2024 PDevelopmet
@@ -23,70 +25,104 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   double hourDataContainerWidth = 67;
+  DateTime currentTime = DateTime.now();
   final ScrollController _scrollController = ScrollController();
 
-  Widget getWeatherIcon(int code) {
+  int statusCode = 1276;
+  Widget getWeatherIcon(int code, int isday) {
     switch (code) {
-      case >= 200 && < 300:
-        return Image.asset(
-          'assets/images/1.png',
-        );
-      case >= 300 && < 400:
-        return Image.network('assets/images/2.png');
-      case >= 500 && < 600:
-        return Image.asset('assets/images/3.png');
-      case >= 600 && < 700:
-        return Image.asset('assets/images/4.png');
-      case >= 700 && < 800:
-        return Image.asset('assets/images/5.png');
-      case == 800:
-        return Image.asset('assets/images/6.png');
-      case > 800 && <= 804:
-        return Image.asset('assets/images/7.png');
+      case >= 1000 && < 1002:
+        return Image.asset('assets/images/0$isday-00-clear.png');
+      case >= 1003 && < 1006:
+        return Image.network('assets/images/0$isday-01-partlycloudy.png');
+      case >= 1006 && < 1009:
+        return Image.asset('assets/images/0$isday-03-cloudy.png');
+      case >= 1009 && < 1030:
+        return Image.asset('assets/images/0$isday-04-overcast.png');
+      case >= 1030 && < 1063:
+        return Image.asset('assets/images/0$isday-02-mist.png');
+      case == 1063:
+        return Image.asset('assets/images/0$isday-05-patchyrain.png');
+      case == 1066:
+        return Image.asset('assets/images/0$isday-06-patchsnow.png');
+      case == 1087:
+        return Image.asset('assets/images/0$isday-08-thunder.png');
+      case >= 1069 && < 1114:
+        return Image.asset('assets/images/0$isday-07-patchysleet.png');
+      case >= 1114 && < 1150:
+        return Image.asset('assets/images/0$isday-09-fog.png');
+      case >= 1150 && < 1192:
+        return Image.asset('assets/images/0$isday-10-lightrain.png');
+      case >= 1192 && < 1204:
+        return Image.asset('assets/images/0$isday-11-heavyrain.png');
+      case >= 1204 && < 1222:
+        return Image.asset('assets/images/0$isday-12-lightsnow.png');
+      case >= 1222 && < 1239:
+        return Image.asset('assets/images/0$isday-13-heavysnow.png');
+      case >= 1239 && < 1243:
+        return Image.asset('assets/images/0$isday-14-lightrainshower.png');
+      case >= 1243 && < 1249:
+        return Image.asset('assets/images/0$isday-15-heavytrainshower.png');
+      case >= 1249 && < 1264:
+        return Image.asset('assets/images/0$isday-16-lightsnowshower.png');
+      case == 1264:
+        return Image.asset('assets/images/0$isday-17-heavysnowshawer.png');
+      case == 1273:
+        return Image.asset('assets/images/0$isday-19-lightrainwiththunder.png');
+      case == 1276:
+        return Image.asset('assets/images/0$isday-20-heavyrainwiththunder.png');
+      case >= 1289 && < 1283:
+        return Image.asset('assets/images/0$isday-20-heavyrainwiththunder.png');
       default:
-        return Image.asset('assets/images/7.png');
+        return Image.asset('assets/images/0$isday-21-snowwiththender.png');
     }
   }
 
   @override
   void initState() {
     super.initState();
-
-    _fetchWeatherData();
-  }
-
-  DateTime currentTime = DateTime.now();
-  void _scrollToCurrentHour() {
-    int currentHour = currentTime.hour;
-    double itemWidth = hourDataContainerWidth;
-
-    _scrollController.animateTo(
-      currentHour * itemWidth * 1.1,
-      duration: Duration(seconds: 4),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  Future<void> _fetchWeatherData() async {
-    log("here");
-    final whetherData = await FeachData.feachWetherInfo();
-    setState(() {
-      WhetherInheritedWidget.of(context).whetherData =
-          WhetherData.fromJson(whetherData);
-
-      log("${WhetherInheritedWidget.of(context).whetherData.toJson()['current']['temp_c']}");
-    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToCurrentHour();
     });
+    setState(() {});
+    _fetchWeatherData();
+  }
+
+  void _scrollToCurrentHour() async {
+    int currentHour = currentTime.hour;
+    double itemWidth = hourDataContainerWidth;
+    if (WhetherInheritedWidget.of(context)
+        .whetherData
+        .forecast!
+        .forecastday![0]
+        .hour!
+        .isNotEmpty) {
+      _scrollController.animateTo(
+        currentHour * itemWidth * 1.1,
+        duration: const Duration(seconds: 4),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  Future<void> _fetchWeatherData() async {
+    final whetherData =
+        await FeachData.feachWetherInfo(await Geolocator.getCurrentPosition());
+    setState(() {
+      WhetherInheritedWidget.of(context).whetherData = whetherData;
+
+      log("${whetherData.toJson()['current']['temp_c']}");
+    });
+
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    WhetherData whetherData = WhetherInheritedWidget.of(context).whetherData;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return (WhetherInheritedWidget.of(context).whetherData.current != null)
+    return (whetherData.current != null)
         ? Scaffold(
             backgroundColor: const Color.fromARGB(255, 19, 19, 19),
             extendBodyBehindAppBar: true,
@@ -101,23 +137,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 size: 30,
                 color: Colors.white,
               ),
-              title: const Row(
+              title: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.location_pin,
                     color: Colors.white,
                     size: 23,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 5,
                   ),
                   Text(
-                    "Pune",
-                    style: TextStyle(
+                    whetherData.location!.name!,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
-                      fontSize: 23,
+                      fontSize: 22,
                     ),
                   )
                 ],
@@ -130,31 +166,31 @@ class _HomeScreenState extends State<HomeScreen> {
                   //height: height,
                   child: Stack(
                     children: [
-                      // Align(
-                      //   alignment: const AlignmentDirectional(3, -0.3),
-                      //   child: Container(
-                      //     height: 300,
-                      //     width: 300,
-                      //     decoration: const BoxDecoration(
-                      //         shape: BoxShape.circle, color: Colors.deepPurple),
-                      //   ),
-                      // ),
-                      // Align(
-                      //   alignment: const AlignmentDirectional(-3, -0.3),
-                      //   child: Container(
-                      //     height: 300,
-                      //     width: 300,
-                      //     decoration: const BoxDecoration(
-                      //         shape: BoxShape.circle, color: Color(0xFF673AB7)),
-                      //   ),
-                      // ),
+                      Align(
+                        alignment: const AlignmentDirectional(3, -0.3),
+                        child: Container(
+                          height: 300,
+                          width: width * 0.9,
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.deepPurple),
+                        ),
+                      ),
+                      Align(
+                        alignment: const AlignmentDirectional(-3, -0.3),
+                        child: Container(
+                          height: 300,
+                          width: width * 0.9,
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle, color: Color(0xFF673AB7)),
+                        ),
+                      ),
                       Align(
                         alignment: const AlignmentDirectional(0, -0.85),
                         child: Container(
                           height: 220,
                           width: 220,
                           decoration: const BoxDecoration(
-                              color: Color.fromARGB(95, 232, 217, 12)),
+                              color: Color.fromARGB(251, 232, 151, 12)),
                         ),
                       ),
                       BackdropFilter(
@@ -173,15 +209,37 @@ class _HomeScreenState extends State<HomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(
-                                  height: 30,
+                                  height: 20,
                                 ),
                                 Column(
                                   children: [
-                                    Container(
-                                      height: height * 0.21,
-                                      alignment: Alignment.center,
-                                      child: getWeatherIcon(
-                                          200 /*state.weather.weatherConditionCode!*/),
+                                    Stack(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              alignment: Alignment.center,
+                                              height: 150,
+                                              width: 400,
+                                              child: CloudAnimation(),
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          height: height * 0.21,
+                                          alignment: Alignment.center,
+                                          child: Stack(
+                                            children: [
+                                              getWeatherIcon(
+                                                  whetherData.current!
+                                                      .condition!.code!,
+                                                  whetherData.current!.isDay!),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     const SizedBox(
                                       width: 25,
@@ -197,42 +255,43 @@ class _HomeScreenState extends State<HomeScreen> {
                                             Container(
                                               alignment: Alignment.center,
                                               height: 100,
-                                              child: Text(
-                                                  "${WhetherInheritedWidget.of(context).whetherData.current!.tempC!.round()}°",
+                                              child: (whetherData.current !=
+                                                      null)
+                                                  ? Text(
+                                                      " ${whetherData.current!.tempC!.round()}°",
 
-                                                  //'${state.weather.temperature!.celsius!.round()}°C',
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 75,
-                                                    fontWeight: FontWeight.w600,
-                                                  )),
+                                                      //'${state.weather.temperature!.celsius!.round()}°C',
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 75,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ))
+                                                  : const Text(
+                                                      "Not avalable at this moment ",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 30,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
                                             ),
-                                            // Text(
-                                            //   "c",
-                                            //   //'${state.weather.temperature!.celsius!.round()}°C',
-                                            //   style: TextStyle(
-                                            //       color: Colors.white,
-                                            //       fontSize: 45,
-                                            //       fontWeight: FontWeight.w500),
-                                            // ),
                                           ],
                                         ),
-                                        Center(
-                                          child: Text(
-                                            WhetherInheritedWidget.of(context)
-                                                .whetherData
-                                                .location!
-                                                .localtime!
-                                                .split(" ")[0],
-                                            style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w400),
-                                          ),
+                                        Text(
+                                          WhetherInheritedWidget.of(context)
+                                              .whetherData
+                                              .location!
+                                              .localtime!
+                                              .split(" ")[0],
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400),
                                         ),
                                         Container(
                                           alignment: Alignment.center,
-                                          width: width * 0.8 - 60,
                                           child: Text(
                                             (WhetherInheritedWidget.of(context)
                                                         .whetherData
@@ -246,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     .current!
                                                     .condition!
                                                     .text!
-                                                : "No condition massege",
+                                                : "No whether massege avaleble",
                                             maxLines: 2,
                                             textAlign: TextAlign.center,
                                             overflow: TextOverflow.ellipsis,
@@ -278,7 +337,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       otherInfoButton(
                                         label: "Wind",
                                         value:
-                                            "${WhetherInheritedWidget.of(context).whetherData.current!.windKph!.round()} km/h",
+                                            "${whetherData.current!.windKph!.round()} km/h",
                                         icon: const Icon(
                                           Icons.air_rounded,
                                           color: Color.fromARGB(
@@ -294,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       otherInfoButton(
                                           label: "Humidity",
                                           value:
-                                              "${WhetherInheritedWidget.of(context).whetherData.current!.humidity}%",
+                                              "${whetherData.current!.humidity}%",
                                           icon: const Icon(
                                             Icons.water_drop,
                                             color: Color.fromARGB(
@@ -308,8 +367,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       otherInfoButton(
                                         label: "Rain",
-                                        value:
-                                            "${WhetherInheritedWidget.of(context).whetherData.forecast!.forecastday![0].day!.dailyChanceOfRain}%",
+                                        value: (whetherData.forecast!
+                                                .forecastday!.isNotEmpty)
+                                            ? "${whetherData.forecast!.forecastday![0].day!.dailyChanceOfRain}%"
+                                            : "Not avalable",
                                         icon: const Icon(
                                           Icons.cloud,
                                           color: Color.fromARGB(
@@ -369,159 +430,215 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ],
                                       ),
                                       SizedBox(
-                                        height: 135,
-                                        child: ListView.builder(
-                                          controller: _scrollController,
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount:
-                                              WhetherInheritedWidget.of(context)
-                                                  .whetherData
-                                                  .forecast!
-                                                  .forecastday![0]
-                                                  .hour!
-                                                  .length,
-                                          itemBuilder: (context, index) {
-                                            return Center(
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.all(10),
-                                                margin: const EdgeInsets.only(
-                                                    right: 16.7),
-                                                height:
-                                                    (index == currentTime.hour)
-                                                        ? 106
-                                                        : 100,
-                                                width: (index ==
-                                                        currentTime.hashCode)
-                                                    ? 72
-                                                    : hourDataContainerWidth,
-                                                decoration: (index ==
-                                                        currentTime.hour)
-                                                    ? const BoxDecoration(
-                                                        gradient:
-                                                            LinearGradient(
-                                                          colors: [
-                                                            Color.fromARGB(255,
-                                                                4, 138, 248),
-                                                            Color.fromARGB(255,
-                                                                146, 206, 255)
-                                                          ],
-                                                          begin: Alignment
-                                                              .bottomRight,
-                                                          end:
-                                                              Alignment.topLeft,
-                                                        ),
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    119,
-                                                                    22,
-                                                                    146,
-                                                                    247),
-                                                            blurRadius: 10,
-                                                          )
-                                                        ],
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(26),
-                                                        ),
-                                                        // border: Border.all(
-                                                        //   color: const Color.fromARGB(
-                                                        //       255, 60, 57, 57),
-                                                        // ),
-                                                      )
-                                                    : BoxDecoration(
-                                                        color: const Color
-                                                            .fromARGB(
-                                                            50, 102, 102, 102),
-                                                        borderRadius:
-                                                            const BorderRadius
-                                                                .all(
-                                                          Radius.circular(25),
-                                                        ),
-                                                        border: Border.all(
-                                                          color: const Color
-                                                              .fromARGB(
-                                                              255, 60, 57, 57),
-                                                        ),
-                                                      ),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      "${WhetherInheritedWidget.of(context).whetherData.forecast!.forecastday![0].hour![index].tempC!.round()}°",
-                                                      style: TextStyle(
-                                                        color: (index ==
-                                                                currentTime
-                                                                    .hour)
-                                                            ? Colors.white
-                                                            : const Color
-                                                                .fromARGB(255,
-                                                                192, 190, 190),
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    53,
-                                                                    224,
-                                                                    235,
-                                                                    101),
-                                                            blurRadius: 15,
-                                                          )
-                                                        ],
-                                                      ),
-                                                      child: Image.asset(
-                                                        'assets/images/${index % 9 + 1}.png',
-                                                        height: 30,
-                                                      ),
-                                                    ),
-                                                    Text(
+                                          height: 135,
+                                          child: (whetherData.forecast!
+                                                  .forecastday!.isNotEmpty)
+                                              ? ListView.builder(
+                                                  controller: _scrollController,
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemCount:
                                                       WhetherInheritedWidget.of(
                                                               context)
                                                           .whetherData
                                                           .forecast!
                                                           .forecastday![0]
-                                                          .hour![index]
-                                                          .time!
-                                                          .split(" ")[1],
-                                                      style: TextStyle(
-                                                        color: (index ==
+                                                          .hour!
+                                                          .length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return Center(
+                                                      child: Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10),
+                                                        margin: const EdgeInsets
+                                                            .only(right: 16.7),
+                                                        height: (index ==
                                                                 currentTime
                                                                     .hour)
-                                                            ? Colors.white
-                                                            : const Color
-                                                                .fromARGB(255,
-                                                                192, 190, 190),
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontSize: 11,
+                                                            ? 106
+                                                            : 100,
+                                                        width: (index ==
+                                                                currentTime
+                                                                    .hashCode)
+                                                            ? 72
+                                                            : hourDataContainerWidth,
+                                                        decoration: (index ==
+                                                                currentTime
+                                                                    .hour)
+                                                            ? const BoxDecoration(
+                                                                gradient:
+                                                                    LinearGradient(
+                                                                  colors: [
+                                                                    Color.fromARGB(
+                                                                        255,
+                                                                        4,
+                                                                        122,
+                                                                        248),
+                                                                    Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            172,
+                                                                            211,
+                                                                            243)
+                                                                  ],
+                                                                  begin: Alignment
+                                                                      .bottomRight,
+                                                                  end: Alignment
+                                                                      .topLeft,
+                                                                ),
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            119,
+                                                                            22,
+                                                                            146,
+                                                                            247),
+                                                                    blurRadius:
+                                                                        10,
+                                                                  )
+                                                                ],
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          26),
+                                                                ),
+                                                                // border: Border.all(
+                                                                //   color: const Color.fromARGB(
+                                                                //       255, 60, 57, 57),
+                                                                // ),
+                                                              )
+                                                            : BoxDecoration(
+                                                                color: const Color
+                                                                    .fromARGB(
+                                                                    50,
+                                                                    102,
+                                                                    102,
+                                                                    102),
+                                                                borderRadius:
+                                                                    const BorderRadius
+                                                                        .all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          25),
+                                                                ),
+                                                                border:
+                                                                    Border.all(
+                                                                  color: const Color
+                                                                      .fromARGB(
+                                                                      255,
+                                                                      60,
+                                                                      57,
+                                                                      57),
+                                                                ),
+                                                              ),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                              "${whetherData.forecast!.forecastday![0].hour![index].tempC!.round()}°",
+                                                              style: TextStyle(
+                                                                color: (index ==
+                                                                        currentTime
+                                                                            .hour)
+                                                                    ? Colors
+                                                                        .white
+                                                                    : const Color
+                                                                        .fromARGB(
+                                                                        255,
+                                                                        192,
+                                                                        190,
+                                                                        190),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontSize: 16,
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                                height: 30,
+                                                                decoration:
+                                                                    const BoxDecoration(
+                                                                  boxShadow: [
+                                                                    BoxShadow(
+                                                                      color: Color.fromARGB(
+                                                                          53,
+                                                                          224,
+                                                                          235,
+                                                                          101),
+                                                                      blurRadius:
+                                                                          15,
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                                child: getWeatherIcon(
+                                                                    whetherData
+                                                                        .forecast!
+                                                                        .forecastday![
+                                                                            0]
+                                                                        .hour![
+                                                                            index]
+                                                                        .condition!
+                                                                        .code!,
+                                                                    whetherData
+                                                                        .forecast!
+                                                                        .forecastday![
+                                                                            0]
+                                                                        .hour![
+                                                                            index]
+                                                                        .isDay!)),
+                                                            Text(
+                                                              WhetherInheritedWidget.of(
+                                                                      context)
+                                                                  .whetherData
+                                                                  .forecast!
+                                                                  .forecastday![
+                                                                      0]
+                                                                  .hour![index]
+                                                                  .time!
+                                                                  .split(
+                                                                      " ")[1],
+                                                              style: TextStyle(
+                                                                color: (index ==
+                                                                        currentTime
+                                                                            .hour)
+                                                                    ? Colors
+                                                                        .white
+                                                                    : const Color
+                                                                        .fromARGB(
+                                                                        255,
+                                                                        192,
+                                                                        190,
+                                                                        190),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontSize: 11,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      )
+                                                    );
+                                                  },
+                                                )
+                                              : const Center(
+                                                  child:
+                                                      Text("No data avalebale"),
+                                                ))
                                     ],
                                   ),
                                 ),
                                 Container(
                                   height: 105,
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 30,
+                                    horizontal: 15,
                                     vertical: 10,
                                   ),
                                   decoration: const BoxDecoration(
@@ -531,29 +648,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   alignment: Alignment.center,
                                   child: SunPositionScreen(
-                                    sunrise: parseTime(
-                                        WhetherInheritedWidget.of(context)
-                                            .whetherData
-                                            .forecast!
-                                            .forecastday![0]
-                                            .astro!
-                                            .sunrise!),
-                                    sunset: parseTime(
-                                        WhetherInheritedWidget.of(context)
-                                            .whetherData
-                                            .forecast!
-                                            .forecastday![0]
-                                            .astro!
-                                            .sunset!),
+                                    sunrise: parseTime(whetherData.forecast!
+                                        .forecastday![0].astro!.sunrise!),
+                                    sunset: parseTime(whetherData.forecast!
+                                        .forecastday![0].astro!.sunset!),
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 20,
+                                  height: 15,
                                 ),
                                 Container(
                                   height: 105,
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 30,
+                                    horizontal: 15,
                                     vertical: 10,
                                   ),
                                   decoration: const BoxDecoration(
@@ -564,6 +671,34 @@ class _HomeScreenState extends State<HomeScreen> {
                                   alignment: Alignment.center,
                                   child: const MoonLocation(),
                                 ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Last update: ${whetherData.current!.lastUpdated!.split(" ")[0]}  |  ${whetherData.current!.lastUpdated!.split(" ")[1]}",
+                                          style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 183, 182, 182),
+                                              fontSize: 12),
+                                        ),
+                                        // const Text(
+                                        //   "Team PDEVELOPMENT",
+                                        //   style: TextStyle(
+                                        //       color: Color.fromARGB(
+                                        //           255, 200, 199, 199),
+                                        //       fontSize: 12),
+                                        // ),
+                                      ],
+                                    )
+                                  ],
+                                )
                               ],
                             ),
                           ),
@@ -579,7 +714,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // The method convert String in DateTime format
   // String requred in hour:min or hour:min AM/PM format
-
   DateTime parseTime(String time) {
     final minHourTime = time.split(" ")[0];
     final now = DateTime.now();

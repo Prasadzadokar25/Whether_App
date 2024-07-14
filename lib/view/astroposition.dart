@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:wether_report_api/main.dart';
+import 'package:wether_report_api/Controller/whether_inherited_widget.dart';
+
+import 'whetheranimation.dart';
 
 class SunPositionScreen extends StatefulWidget {
   final DateTime sunrise;
@@ -46,6 +48,9 @@ class _SunPositionScreenState extends State<SunPositionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List sunriseStringPart = widget.sunrise.toString().split(" ")[1].split(":");
+    List sunsetStringPart = widget.sunset.toString().split(" ")[1].split(":");
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -54,11 +59,12 @@ class _SunPositionScreenState extends State<SunPositionScreen> {
           Stack(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const SizedBox(width: 10),
                   Container(
-                    height: 25,
-                    width: MediaQuery.of(context).size.width - 100 - 25,
+                    height: 40,
+                    width: MediaQuery.of(context).size.width - 70 - 25,
                     alignment: Alignment.center,
                     child: LinearProgressIndicator(
                       value: sunPosition,
@@ -73,103 +79,90 @@ class _SunPositionScreenState extends State<SunPositionScreen> {
                   )
                 ],
               ),
-              if (sunPosition >= 0)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width:
-                          (MediaQuery.of(context).size.width - 100 - 5 - 20) *
-                              sunPosition,
-                    ),
-                    GestureDetector(
-                      onLongPress: () {},
-                      child: Container(
-                        height: 22,
-                        width: 22,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color.fromARGB(255, 249, 86, 4),
-                                Color.fromARGB(255, 249, 176, 140),
-                                Color.fromARGB(255, 255, 255, 255)
-                              ],
-                              begin: Alignment.bottomRight,
-                              end: Alignment.topLeft,
-                            ),
-                            boxShadow: [
-                              if (sunPosition < 0.91 && sunPosition > 0.085)
-                                const BoxShadow(
-                                  color: Color.fromARGB(255, 255, 173, 41),
-                                  blurRadius: 16,
-                                  spreadRadius: 1,
-                                )
-                            ]),
+              if (sunPosition >= 0 && sunPosition < 1)
+                Container(
+                  height: 40,
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width:
+                            (MediaQuery.of(context).size.width - 70 - 5 - 25) *
+                                sunPosition,
                       ),
-                    ),
-                    // const Icon(
-                    //   Icons.sunny,
-                    //   size: 25,
-                    //   color: Color.fromARGB(255, 255, 168, 7),
-                    // )
-                  ],
-                ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    height: 30,
-                    width: 20,
-                    decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 25, 25, 25),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color.fromARGB(255, 25, 25, 25),
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                          )
-                        ]),
+                      GestureDetector(
+                        onLongPress: () {},
+                        child: Container(
+                          height: 22,
+                          width: 22,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: const LinearGradient(
+                                colors: [
+                                  Color.fromARGB(255, 252, 46, 27),
+                                  Color.fromARGB(255, 251, 157, 118),
+                                  Color.fromARGB(255, 255, 233, 233)
+                                ],
+                                // stops: [0.2, 0.8, 0.9],
+                                begin: Alignment.bottomRight,
+                                end: Alignment.topLeft,
+                              ),
+                              boxShadow: [
+                                if (sunPosition < 0.91 && sunPosition > 0.085)
+                                  const BoxShadow(
+                                    color: Color.fromARGB(255, 255, 173, 41),
+                                    blurRadius: 16,
+                                    spreadRadius: 1,
+                                  )
+                              ]),
+                        ),
+                      ),
+                    ],
                   ),
-                  Container(
-                    height: 30,
-                    width: 25,
-                    decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 25, 25, 25),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color.fromARGB(255, 25, 25, 25),
-                            blurRadius: 5,
-                            spreadRadius: 2,
-                          )
-                        ]),
-                  )
-                ],
-              )
+                ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Container(
+              //       height: 40,
+              //       width: 30,
+              //       decoration: const BoxDecoration(
+              //         boxShadow: [],
+              //       ),
+              //       child: Image.asset(
+              //         "assets/images/mountains.png",
+              //         fit: BoxFit.cover,
+              //       ),
+              //     ),
+              //     Container(
+              //       height: 30,
+              //       width: 25,
+              //       decoration: const BoxDecoration(
+              //           color: Color.fromARGB(255, 25, 25, 25),
+              //           boxShadow: [
+              //             BoxShadow(
+              //               color: Color.fromARGB(255, 25, 25, 25),
+              //               blurRadius: 5,
+              //               spreadRadius: 2,
+              //             )
+              //           ]),
+              //     )
+              //   ],
+              // )
             ],
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 2),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               getSunRiseSunSetLabel(
                 lable: "Sunrise",
-                time: WhetherInheritedWidget.of(context)
-                    .whetherData
-                    .forecast!
-                    .forecastday![0]
-                    .astro!
-                    .sunrise!
-                    .split(' ')[0],
+                time: sunriseStringPart[0] + ":" + sunriseStringPart[1],
               ),
               getSunRiseSunSetLabel(
                 lable: "Sunset",
-                time: WhetherInheritedWidget.of(context)
-                    .whetherData
-                    .forecast!
-                    .forecastday![0]
-                    .astro!
-                    .sunset!,
+                time: sunsetStringPart[0] + ":" + sunsetStringPart[1],
               ),
             ],
           ),
@@ -207,7 +200,7 @@ class _MoonLocationState extends State<MoonLocation> {
                     .moonrise!,
               ),
               getSunRiseSunSetLabel(
-                lable: "Moonrise",
+                lable: "Moonset",
                 time: WhetherInheritedWidget.of(context)
                     .whetherData
                     .forecast!
@@ -228,10 +221,8 @@ String convertInto24Hour(String time) {
     String newTime = time.replaceAll("pm", "");
     String newTime2 = newTime.replaceAll("PM", "");
     List<String> parts = newTime2.split(":");
-    int hour = int.parse(parts[0]) + 12;
-    if (hour >= 24) {
-      return "00:${parts[1]}";
-    }
+    int hour = (int.parse(parts[0]) + 12) % 24;
+
     return "$hour:${parts[1]}";
   } else if (time.endsWith("AM") || time.endsWith('am')) {
     String newTime = time.replaceAll("AM", "");
