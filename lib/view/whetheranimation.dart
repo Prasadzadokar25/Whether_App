@@ -20,7 +20,7 @@ class _CloudAnimationState extends State<CloudAnimation>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10), // Adjust duration as needed
+      duration: const Duration(seconds: 20), // Adjust duration as needed
     );
 
     _controller.repeat(reverse: false); // Make clouds move back and forth
@@ -51,7 +51,11 @@ class _CloudAnimationState extends State<CloudAnimation>
     _opacityAnimation2 = Tween<double>(begin: 0.9, end: 0.0).animate(
       CurvedAnimation(
           parent: _controller,
-          curve: const Interval(0.8, 1.0, curve: Curves.easeOut)),
+          curve: const Interval(
+            0.8,
+            1.0,
+            curve: Curves.easeOut,
+          )),
     );
     _opacityAnimation3 = Tween<double>(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(
@@ -61,14 +65,12 @@ class _CloudAnimationState extends State<CloudAnimation>
 
     return Stack(
       children: [
-        // Your weather widgets here
-
         // First animated cloud
         AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {
             return Positioned(
-              top: 10.0, // Adjust positioning as needed
+              top: 10.0,
               left: _animation1.value,
               child: FadeTransition(
                 opacity: _opacityAnimation1,
@@ -86,7 +88,7 @@ class _CloudAnimationState extends State<CloudAnimation>
           animation: _controller,
           builder: (context, child) {
             return Positioned(
-              top: 70.0, // Adjust positioning as needed
+              top: 70.0,
               left: _animation2.value,
               child: FadeTransition(
                 opacity: _opacityAnimation2,
@@ -125,7 +127,7 @@ class CloudPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color = Colors.grey[300]!
+      ..color = Color.fromARGB(255, 165, 163, 163)!
       ..style = PaintingStyle.fill;
 
     Path path = Path();
