@@ -10,6 +10,7 @@ class FeachData {
     // Replace with your test API key
     double latitude = position.latitude;
     double longitude = position.longitude;
+
     String wetherApiUrl =
         "https://api.weatherapi.com/v1/forecast.json?key=$apiKey&q=$latitude,$longitude&days=1'";
     Uri uri = Uri.parse(wetherApiUrl);

@@ -413,6 +413,26 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SizedBox(
                               height: 15,
                             ),
+                            Column(
+                              children: List.generate(5, (index) {
+                                return const Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    InfoWidget(
+                                      lable: "Pressure",
+                                      value: "10",
+                                      icon: Icon(Icons.add),
+                                    ),
+                                    InfoWidget(
+                                      lable: "Pressure",
+                                      value: "10",
+                                      icon: Icon(Icons.add),
+                                    )
+                                  ],
+                                );
+                              }),
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -594,7 +614,7 @@ class _HourWeatherCardState extends State<HourWeatherCard> {
   }
 }
 
-class InfoWidget extends StatelessWidget {
+class InfoWidget extends StatefulWidget {
   final String lable;
   final String value;
   final Widget icon;
@@ -604,12 +624,18 @@ class InfoWidget extends StatelessWidget {
     required this.icon,
     super.key,
   });
+
   @override
-  Widget build(BuildContext) {
+  State<InfoWidget> createState() => _InfoWidgetState();
+}
+
+class _InfoWidgetState extends State<InfoWidget> {
+  @override
+  Widget build(BuildContext context) {
     return Container(
       height: 100,
       width: 200,
-      decoration: BoxDecoration(color: Colors.amber),
+      decoration: const BoxDecoration(color: Colors.amber),
     );
   }
 }
