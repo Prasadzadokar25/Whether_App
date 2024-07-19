@@ -3,11 +3,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:wether_report_api/Controller/feach_location.dart';
-import 'package:wether_report_api/Controller/whether_inherited_widget.dart';
-import 'package:wether_report_api/Model/whether_data.dart';
-import 'package:wether_report_api/view/whetheranimation.dart';
+import '../Controller/feach_location.dart';
+import '../Controller/whether_inherited_widget.dart';
+import '../Model/whether_data.dart';
+import '../view/whetheranimation.dart';
 import '../Controller/feach_data.dart';
+import '../Model/dataiterm_model.dart';
 import 'astroposition.dart';
 import 'weatherconditionicon.dart';
 
@@ -69,63 +70,63 @@ class _HomeScreenState extends State<HomeScreen> {
         ? Scaffold(
             backgroundColor: const Color.fromARGB(255, 19, 19, 19),
             extendBodyBehindAppBar: true,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                  statusBarBrightness: Brightness.dark),
-              centerTitle: true,
-              leading: const Icon(
-                Icons.menu_open_rounded,
-                size: 30,
-                color: Colors.white,
-              ),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Icons.location_pin,
-                    color: Colors.white,
-                    size: 23,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    whetherData.location!.name!,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 22,
-                    ),
-                  )
-                ],
-              ),
-            ),
+            // appBar: AppBar(
+            //   backgroundColor: Colors.transparent,
+            //   elevation: 0,
+            //   systemOverlayStyle: const SystemUiOverlayStyle(
+            //       statusBarBrightness: Brightness.dark),
+            //   centerTitle: true,
+            //   title: Row(
+            //     mainAxisAlignment: MainAxisAlignment.start,
+            //     children: [
+            //       const Icon(
+            //         Icons.location_pin,
+            //         color: Colors.white,
+            //         size: 23,
+            //       ),
+            //       const SizedBox(
+            //         width: 5,
+            //       ),
+            //       Text(
+            //         whetherData.location!.name!,
+            //         style: const TextStyle(
+            //           color: Colors.white,
+            //           fontWeight: FontWeight.w500,
+            //           fontSize: 22,
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            //   iconTheme: const IconThemeData(color: Colors.white),
+            // ),
+            // drawer: const Drawer(
+            //   backgroundColor: Colors.black,
+            //   child: MyDrawer(),
+            // ),
             body: Padding(
               padding: const EdgeInsets.fromLTRB(18, kToolbarHeight, 18, 8),
               child: SizedBox(
                 height: height,
                 child: Stack(
                   children: [
-                    Align(
-                      alignment: const AlignmentDirectional(3, -0.3),
-                      child: Container(
-                        height: 300,
-                        width: width * 0.9,
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.deepPurple),
-                      ),
-                    ),
-                    Align(
-                      alignment: const AlignmentDirectional(-3, -0.3),
-                      child: Container(
-                        height: 300,
-                        width: width * 0.9,
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle, color: Color(0xFF673AB7)),
-                      ),
-                    ),
+                    // Align(
+                    //   alignment: const AlignmentDirectional(3, -0.3),
+                    //   child: Container(
+                    //     height: 300,
+                    //     width: width * 0.9,
+                    //     decoration: const BoxDecoration(
+                    //         shape: BoxShape.circle, color: Colors.deepPurple),
+                    //   ),
+                    // ),
+                    // Align(
+                    //   alignment: const AlignmentDirectional(-3, -0.3),
+                    //   child: Container(
+                    //     height: 300,
+                    //     width: width * 0.9,
+                    //     decoration: const BoxDecoration(
+                    //         shape: BoxShape.circle, color: Color(0xFF673AB7)),
+                    //   ),
+                    // ),
                     Align(
                       alignment: const AlignmentDirectional(0, -0.85),
                       child: Container(
@@ -166,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Container(
                                           alignment: Alignment.center,
                                           height: 150,
-                                          width: 400,
+                                          width: width / 1.5,
                                           child: CloudAnimation(),
                                         ),
                                       ],
@@ -394,7 +395,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             const SizedBox(
-                              height: 15,
+                              height: 10,
                             ),
                             Container(
                               height: 105,
@@ -413,47 +414,34 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SizedBox(
                               height: 15,
                             ),
-                            Column(
-                              children: List.generate(5, (index) {
-                                return const Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    InfoWidget(
-                                      lable: "Pressure",
-                                      value: "10",
-                                      icon: Icon(Icons.add),
-                                    ),
-                                    InfoWidget(
-                                      lable: "Pressure",
-                                      value: "10",
-                                      icon: Icon(Icons.add),
-                                    )
-                                  ],
-                                );
-                              }),
+                            const AirQuality(),
+                            const SizedBox(child: MyGridView()),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              height: 130,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 15,
+                                vertical: 10,
+                              ),
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(82, 44, 43, 43),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(18)),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Last update: ${whetherData.current!.lastUpdated!.split(" ")[0]}  |  ${whetherData.current!.lastUpdated!.split(" ")[1]}",
-                                      style: const TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 183, 182, 182),
-                                          fontSize: 12),
-                                    ),
-                                    // const Text(
-                                    //   "Team PDEVELOPMENT",
-                                    //   style: TextStyle(
-                                    //       color: Color.fromARGB(
-                                    //           255, 200, 199, 199),
-                                    //       fontSize: 12),
-                                    // ),
-                                  ],
+                                Text(
+                                  "Updated: ${whetherData.current!.lastUpdated!.split(" ")[0]}  |  ${whetherData.current!.lastUpdated!.split(" ")[1]}",
+                                  style: const TextStyle(
+                                      color: Color.fromARGB(255, 183, 182, 182),
+                                      fontSize: 12),
                                 )
                               ],
                             )
@@ -515,6 +503,218 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Color.fromARGB(255, 170, 168, 168)),
         ),
       ],
+    );
+  }
+}
+
+class AirQuality extends StatefulWidget {
+  const AirQuality({super.key});
+
+  @override
+  State<AirQuality> createState() => _AirQualityState();
+}
+
+class _AirQualityState extends State<AirQuality> {
+  @override
+  Widget build(BuildContext context) {
+    WhetherData whetherData = WhetherInheritedWidget.of(context).whetherData;
+    int usEpaIndex = whetherData.current!.airQuality!.usEpaIndex!;
+    double width = MediaQuery.of(context).size.width;
+    double calculateQirQulityPersentage(int value) {
+      return value / 6; // divide by 6 becouse total categories are 6
+    }
+
+    Color getairQuilityColor(int value) {
+      switch (value) {
+        case 1:
+          return const Color.fromARGB(255, 53, 219, 59);
+        case 2:
+          return const Color.fromARGB(255, 112, 216, 64);
+        case 3:
+          return const Color.fromARGB(255, 178, 200, 15);
+        case 4:
+          return const Color.fromARGB(255, 221, 211, 18);
+        case 5:
+          return const Color.fromARGB(255, 230, 125, 19);
+        default:
+          return const Color.fromARGB(255, 230, 44, 19);
+      }
+    }
+
+    String getAirQulityStatus(int value) {
+      switch (value) {
+        case 1:
+          return "Good";
+        case 2:
+          return "Moderate";
+        case 3:
+          return "Unhealthy for Sensitive Groups";
+        case 4:
+          return "Unhealthy";
+        case 5:
+          return "Very Unhealthy";
+        default:
+          return "Hazardous";
+      }
+    }
+
+    return Container(
+      height: 100,
+      width: width,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15,
+        vertical: 10,
+      ),
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(82, 44, 43, 43),
+        borderRadius: BorderRadius.all(Radius.circular(18)),
+      ),
+      child: Column(
+        children: [
+          const Text(
+            "Air Quality",
+            style: TextStyle(
+              fontSize: 12,
+              color: Color.fromARGB(255, 214, 212, 212),
+            ),
+          ),
+          const SizedBox(
+            height: 2,
+          ),
+          Text(
+            getAirQulityStatus(usEpaIndex),
+            style: const TextStyle(
+              fontSize: 18,
+              color: Color.fromARGB(255, 214, 212, 212),
+            ),
+          ),
+          Container(
+              padding: const EdgeInsets.all(10),
+              alignment: Alignment.center,
+              width: width * 0.75,
+              child: LinearProgressIndicator(
+                value: calculateQirQulityPersentage(usEpaIndex),
+                minHeight: 8,
+                color: getairQuilityColor(usEpaIndex),
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+              )),
+        ],
+      ),
+    );
+  }
+}
+
+class MyGridView extends StatelessWidget {
+  const MyGridView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    WhetherData whetherData = WhetherInheritedWidget.of(context).whetherData;
+    List termsInfo = [
+      DataIterm(
+        label: "Pressure",
+        value: "${whetherData.current!.pressureMb!}",
+        unit: "mb",
+        icon: const Icon(
+          Icons.vertical_align_center_sharp,
+          color: Color.fromARGB(255, 239, 236, 216),
+        ),
+      ),
+      DataIterm(
+        label: "Dew Point",
+        value: "${whetherData.current!.dewpointC!}",
+        unit: "°",
+        icon: const Icon(
+          Icons.water_drop,
+          color: Color.fromARGB(255, 239, 236, 216),
+        ),
+      ),
+      DataIterm(
+        label: "Wind",
+        value: "${whetherData.current!.windKph!}",
+        unit: "km/hr | ${whetherData.current!.windDir}",
+        icon: const Icon(
+          Icons.air,
+          color: Color.fromARGB(255, 239, 236, 216),
+        ),
+      ),
+      DataIterm(
+        label: "UV Index",
+        value: "${whetherData.current!.uv!}",
+        icon: const Icon(
+          Icons.sunny,
+          color: Color.fromARGB(255, 239, 236, 216),
+        ),
+      ),
+      DataIterm(
+        label: "Visibility",
+        // ignore: unnecessary_cast
+        value: "${whetherData.current!.visKm! as double}",
+        unit: "km",
+        icon: const Icon(
+          Icons.remove_red_eye,
+          color: Color.fromARGB(255, 239, 236, 216),
+        ),
+      ),
+      DataIterm(
+        label: "HeatIndex",
+        value: "${whetherData.current!.heatindexC!}",
+        icon: const Icon(
+          Icons.hot_tub_sharp,
+          color: Color.fromARGB(255, 239, 236, 216),
+        ),
+      ),
+    ];
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics:
+          const NeverScrollableScrollPhysics(), // Disable GridView's own scrolling
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 10.0,
+          mainAxisSpacing: 10.0,
+          childAspectRatio: 1.9),
+      itemCount: termsInfo.length,
+      itemBuilder: (context, index) {
+        return Container(
+          padding: const EdgeInsets.all(12),
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(124, 38, 38, 38),
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  termsInfo[index].icon,
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    termsInfo[index].label,
+                    style: const TextStyle(
+                      color: Color.fromARGB(255, 214, 212, 212),
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                "${termsInfo[index].value} ${(termsInfo[index].unit != null) ? termsInfo[index].unit : ""}",
+                style: const TextStyle(
+                    letterSpacing: 0.5,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 17),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -614,32 +814,6 @@ class _HourWeatherCardState extends State<HourWeatherCard> {
   }
 }
 
-class InfoWidget extends StatefulWidget {
-  final String lable;
-  final String value;
-  final Widget icon;
-  const InfoWidget({
-    required this.lable,
-    required this.value,
-    required this.icon,
-    super.key,
-  });
-
-  @override
-  State<InfoWidget> createState() => _InfoWidgetState();
-}
-
-class _InfoWidgetState extends State<InfoWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      width: 200,
-      decoration: const BoxDecoration(color: Colors.amber),
-    );
-  }
-}
-
 class TemperatureChart extends StatelessWidget {
   final List<double> hourlyTemperatures;
 
@@ -693,3 +867,4 @@ class TemperatureChart extends StatelessWidget {
     );
   }
 }
+

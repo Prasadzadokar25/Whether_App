@@ -34,7 +34,7 @@ class _CloudAnimationState extends State<CloudAnimation>
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = 400.0;
+    final screenWidth = MediaQuery.of(context).size.width / 1.5;
 
     _animation1 = Tween<double>(begin: -150.0, end: screenWidth - 90)
         .animate(_controller);
@@ -46,7 +46,8 @@ class _CloudAnimationState extends State<CloudAnimation>
     _opacityAnimation1 = Tween<double>(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(
           parent: _controller,
-          curve: const Interval(0.1, 1.0, curve: Curves.easeOut)),
+          curve: const Interval(0.1
+          , 1.0, curve: Curves.easeOut)),
     );
     _opacityAnimation2 = Tween<double>(begin: 0.9, end: 0.0).animate(
       CurvedAnimation(
@@ -73,12 +74,10 @@ class _CloudAnimationState extends State<CloudAnimation>
               top: 10.0,
               left: _animation1.value,
               child: FadeTransition(
-                opacity: _opacityAnimation1,
-                child: CustomPaint(
-                  painter: CloudPainter(),
-                  child: const SizedBox(width: 100, height: 50),
-                ),
-              ),
+                  opacity: _opacityAnimation1,
+                  child: const CloudDrawing(
+                    size: 90,
+                  )),
             );
           },
         ),
@@ -91,12 +90,10 @@ class _CloudAnimationState extends State<CloudAnimation>
               top: 70.0,
               left: _animation2.value,
               child: FadeTransition(
-                opacity: _opacityAnimation2,
-                child: CustomPaint(
-                  painter: CloudPainter(),
-                  child: const SizedBox(width: 120, height: 60),
-                ),
-              ),
+                  opacity: _opacityAnimation2,
+                  child: const CloudDrawing(
+                    size: 90,
+                  )),
             );
           },
         ),
@@ -109,12 +106,10 @@ class _CloudAnimationState extends State<CloudAnimation>
               top: 200.0, // Adjust positioning as needed
               left: _animation3.value,
               child: FadeTransition(
-                opacity: _opacityAnimation3,
-                child: CustomPaint(
-                  painter: CloudPainter(),
-                  child: const SizedBox(width: 140, height: 70),
-                ),
-              ),
+                  opacity: _opacityAnimation3,
+                  child: const CloudDrawing(
+                    size: 90,
+                  )),
             );
           },
         ),
@@ -123,32 +118,58 @@ class _CloudAnimationState extends State<CloudAnimation>
   }
 }
 
-class CloudPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = Color.fromARGB(255, 165, 163, 163)!
-      ..style = PaintingStyle.fill;
-
-    Path path = Path();
-    path.moveTo(size.width * 0.2, size.height * 0.5);
-    path.cubicTo(size.width * 0.1, size.height * 0.5, size.width * 0.1,
-        size.height * 0.2, size.width * 0.3, size.height * 0.2);
-    path.cubicTo(size.width * 0.4, 0, size.width * 0.6, 0, size.width * 0.7,
-        size.height * 0.2);
-    path.cubicTo(size.width * 0.8, size.height * 0.2, size.width * 0.8,
-        size.height * 0.3, size.width * 0.9, size.height * 0.3);
-    path.cubicTo(size.width * 0.95, size.height * 0.5, size.width * 0.8,
-        size.height * 0.7, size.width * 0.6, size.height * 0.6);
-    path.cubicTo(size.width * 0.5, size.height * 0.8, size.width * 0.3,
-        size.height * 0.8, size.width * 0.2, size.height * 0.5);
-    path.close();
-
-    canvas.drawPath(path, paint);
-  }
+class CloudDrawing extends StatefulWidget {
+  final double size;
+  const CloudDrawing({required this.size, super.key});
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+  State<CloudDrawing> createState() => _CloudDrawingState();
+}
+
+class _CloudDrawingState extends State<CloudDrawing> {
+  @override
+  Widget build(BuildContext context) {
+    double width = widget.size;
+    double height = widget.size * 70 / 90;
+    return Container(
+      height: height,
+      width: width,
+      child: Stack(
+        children: [
+          Positioned(
+              right: 0,
+              bottom: 0,
+              child: Container(
+                height: height * 0.45,
+                width: width * 0.66,
+                decoration: const BoxDecoration(
+                    color: Color.fromARGB(254, 255, 255, 255),
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+              )),
+          Positioned(
+              left: width * 0.23,
+              bottom: 0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CircleAvatar(
+                    radius: width * 0.27,
+                    backgroundColor: Colors.white,
+                  ),
+                ],
+              )),
+          Positioned(
+              left: 0,
+              bottom: 0,
+              child: Container(
+                height: height * 0.45,
+                width: width * 0.66,
+                decoration: const BoxDecoration(
+                    color: Color.fromARGB(120, 255, 255, 255),
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+              ))
+        ],
+      ),
+    );
   }
 }

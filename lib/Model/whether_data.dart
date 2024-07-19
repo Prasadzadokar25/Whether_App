@@ -105,37 +105,40 @@ class Current {
   double? uv;
   double? gustMph;
   double? gustKph;
+  AirQuality? airQuality;
 
-  Current(
-      {this.lastUpdatedEpoch,
-      this.lastUpdated,
-      this.tempC,
-      this.tempF,
-      this.isDay,
-      this.condition,
-      this.windMph,
-      this.windKph,
-      this.windDegree,
-      this.windDir,
-      this.pressureMb,
-      this.pressureIn,
-      this.precipMm,
-      this.precipIn,
-      this.humidity,
-      this.cloud,
-      this.feelslikeC,
-      this.feelslikeF,
-      this.windchillC,
-      this.windchillF,
-      this.heatindexC,
-      this.heatindexF,
-      this.dewpointC,
-      this.dewpointF,
-      this.visKm,
-      this.visMiles,
-      this.uv,
-      this.gustMph,
-      this.gustKph});
+  Current({
+    this.lastUpdatedEpoch,
+    this.lastUpdated,
+    this.tempC,
+    this.tempF,
+    this.isDay,
+    this.condition,
+    this.windMph,
+    this.windKph,
+    this.windDegree,
+    this.windDir,
+    this.pressureMb,
+    this.pressureIn,
+    this.precipMm,
+    this.precipIn,
+    this.humidity,
+    this.cloud,
+    this.feelslikeC,
+    this.feelslikeF,
+    this.windchillC,
+    this.windchillF,
+    this.heatindexC,
+    this.heatindexF,
+    this.dewpointC,
+    this.dewpointF,
+    this.visKm,
+    this.visMiles,
+    this.uv,
+    this.gustMph,
+    this.gustKph,
+    this.airQuality,
+  });
 
   Current.fromJson(Map<String, dynamic> json) {
     lastUpdatedEpoch = json['last_updated_epoch'];
@@ -169,6 +172,9 @@ class Current {
     uv = json['uv'];
     gustMph = json['gust_mph'];
     gustKph = json['gust_kph'];
+    airQuality = (json['air_quality'] != null)
+        ? AirQuality.fromJson(json['air_quality'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -469,7 +475,7 @@ class Hour {
   double? visMiles;
   double? gustMph;
   double? gustKph;
-  double? uv;
+  int? uv;
 
   Hour(
       {this.timeEpoch,
@@ -543,7 +549,7 @@ class Hour {
     visMiles = json['vis_miles'];
     gustMph = json['gust_mph'];
     gustKph = json['gust_kph'];
-    uv = json['uv'];
+    uv = json['uv'].toInt();
   }
 
   Map<String, dynamic> toJson() {
@@ -585,5 +591,28 @@ class Hour {
     data['gust_kph'] = gustKph;
     data['uv'] = uv;
     return data;
+  }
+}
+
+class AirQuality {
+  double? co;
+  double? no2;
+  double? o3;
+  double? so2;
+  double? pm25;
+  double? pm10;
+  int? usEpaIndex;
+  int? gbDefraIndex;
+
+  AirQuality.fromJson(Map json) {
+    print(json);
+    co = json['co'];
+    no2 = json['no2'];
+    o3 = json['o3'];
+    so2 = json['so2'];
+    pm25 = json['pm2_5'];
+    pm10 = json['pm10'];
+    usEpaIndex = json['us-epa-index'];
+    gbDefraIndex = json['gb-defra-index'];
   }
 }

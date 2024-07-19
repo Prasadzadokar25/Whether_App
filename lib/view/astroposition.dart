@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:wether_report_api/Controller/whether_inherited_widget.dart';
+import 'package:http/http.dart';
+import '../Controller/whether_inherited_widget.dart';
+import '../Model/imagepaths.dart';
 
 import 'whetheranimation.dart';
 
@@ -30,7 +32,6 @@ class _SunPositionScreenState extends State<SunPositionScreen> {
     final position = calculateSunPosition(sunrise, sunset);
     setState(() {
       sunPosition = position;
-      log("${position}");
     });
   }
 
@@ -198,6 +199,29 @@ class _MoonLocationState extends State<MoonLocation> {
                     .forecastday![0]
                     .astro!
                     .moonrise!,
+              ),
+              Column(
+                children: [
+                  Image.asset(
+                    Paths.moon,
+                    height: 55,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    WhetherInheritedWidget.of(context)
+                        .whetherData
+                        .forecast!
+                        .forecastday![0]
+                        .astro!
+                        .moonPhase!,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Color.fromARGB(255, 229, 228, 228),
+                    ),
+                  )
+                ],
               ),
               getSunRiseSunSetLabel(
                 lable: "Moonset",

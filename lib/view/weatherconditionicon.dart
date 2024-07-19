@@ -49,7 +49,7 @@ class _MyWidgetState extends State<WeatherConditionIcon> {
       case >= 1239 && < 1243:
         return Image.asset('assets/images/0$isday-14-lightrainshower.png');
       case >= 1243 && < 1249:
-        return Image.asset('assets/images/0$isday-15-heavytrainshower.png');
+        return Image.asset('assets/images/0$isday-15-heavyrainshower.png');
       case >= 1249 && < 1264:
         return Image.asset('assets/images/0$isday-16-lightsnowshower.png');
       case == 1264:
