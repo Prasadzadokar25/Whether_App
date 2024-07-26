@@ -514,11 +514,17 @@ class AirQuality extends StatefulWidget {
   State<AirQuality> createState() => _AirQualityState();
 }
 
+
+//temp correction
 class _AirQualityState extends State<AirQuality> {
   @override
   Widget build(BuildContext context) {
     WhetherData whetherData = WhetherInheritedWidget.of(context).whetherData;
-    int usEpaIndex = whetherData.current!.airQuality!.usEpaIndex!;
+    int usEpaIndex = 1;
+    if (whetherData.current!.airQuality != null &&
+        whetherData.current!.airQuality!.usEpaIndex != null) {
+      usEpaIndex = whetherData.current!.airQuality!.usEpaIndex!;
+    }
     double width = MediaQuery.of(context).size.width;
     double calculateQirQulityPersentage(int value) {
       return value / 6; // divide by 6 becouse total categories are 6
@@ -867,4 +873,3 @@ class TemperatureChart extends StatelessWidget {
     );
   }
 }
-

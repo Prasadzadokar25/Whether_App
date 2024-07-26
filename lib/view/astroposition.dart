@@ -1,10 +1,7 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import '../Controller/whether_inherited_widget.dart';
 import '../Model/imagepaths.dart';
 
-import 'whetheranimation.dart';
 
 class SunPositionScreen extends StatefulWidget {
   final DateTime sunrise;
