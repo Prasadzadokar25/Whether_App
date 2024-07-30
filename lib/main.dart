@@ -5,14 +5,13 @@ import '../Controller/feach_location.dart';
 import '../Controller/whether_inherited_widget.dart';
 import '../Model/whether_data.dart';
 import '../view/landing_page.dart';
-import '../view/splash_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return const MaterialApp(  
       debugShowCheckedModeBanner: false,
       home: MyApp2(),
     );
