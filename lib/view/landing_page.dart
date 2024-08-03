@@ -4,7 +4,6 @@ import 'package:pweather/view/weatherconditionicon.dart';
 import '../Controller/whether_inherited_widget.dart';
 import '../Model/whether_data.dart';
 import '../view/home_screen.dart';
-import '../view/seach_page.dart';
 import '../view/radar_view_android.dart';
 import 'navigation_bar.dart';
 import 'setting_page.dart';

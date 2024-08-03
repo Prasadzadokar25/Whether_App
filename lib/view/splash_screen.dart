@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pweather/view/home_screen.dart';
 import 'landing_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -116,7 +117,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 padding: const EdgeInsets.all(10),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(_createRoute());
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return const LandingPage();
+                    }));
                   },
                   child: Container(
                     alignment: Alignment.center,

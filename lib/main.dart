@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:pweather/view/splash_screen.dart';
 import '../Controller/feach_data.dart';
 import '../Controller/feach_location.dart';
 import '../Controller/whether_inherited_widget.dart';
@@ -11,9 +12,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(  
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MyApp2(),
+      title: "PWeather",
     );
   }
 }
@@ -60,7 +62,10 @@ class _MyApp2State extends State {
             child: const LandingPage(),
           )
         : (!isLocationServiceEnabled)
-            ? Text("please cheach intwork")
+            ? const Text(
+                "please cheach intwork\n this module required location access",
+                textAlign: TextAlign.center,
+              )
             : const Center(child: CircularProgressIndicator());
   }
 }

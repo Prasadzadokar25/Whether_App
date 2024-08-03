@@ -1,8 +1,10 @@
 import 'dart:developer';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/widgets.dart';
 import '../Controller/feach_location.dart';
 import '../Controller/whether_inherited_widget.dart';
 import '../Model/whether_data.dart';
@@ -420,7 +422,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: 20,
                             ),
                             Container(
-                              height: 130,
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 15,
                                 vertical: 10,
@@ -430,13 +431,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(18)),
                               ),
+                              child: Column(
+                                children: [
+                                  getActivityStatus(
+                                    name: "Pollen",
+                                    icon: Icons.stream_sharp,
+                                    value: "None",
+                                  ),
+                                  getActivityStatus(
+                                    name: "Running",
+                                    icon: Icons.directions_run_rounded,
+                                    value: "Poor",
+                                  ),
+                                  getActivityStatus(
+                                    name: "Driving difficultywet",
+                                    icon: Icons.drive_eta,
+                                    value: "Wet",
+                                  ),
+                                ],
+                              ),
                             ),
                             const SizedBox(
                               height: 20,
                             ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: const Text(
+                                    "PDevelopment",
+                                    style: TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 183, 182, 182),
+                                        fontSize: 12),
+                                  ),
+                                ),
                                 Text(
                                   "Updated: ${whetherData.current!.lastUpdated!.split(" ")[0]}  |  ${whetherData.current!.lastUpdated!.split(" ")[1]}",
                                   style: const TextStyle(
@@ -455,6 +485,25 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           )
         : const Center(child: CircularProgressIndicator());
+  }
+
+  Widget getActivityStatus(
+      {required String name, required IconData icon, required String value}) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: Colors.white,
+      ),
+      title: Text(
+        name,
+        style: const TextStyle(color: Colors.white, fontSize: 14),
+      ),
+      trailing: Text(
+        value,
+        style: const TextStyle(
+            color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+      ),
+    );
   }
 
   // The method convert String in DateTime format
@@ -513,7 +562,6 @@ class AirQuality extends StatefulWidget {
   @override
   State<AirQuality> createState() => _AirQualityState();
 }
-
 
 //temp correction
 class _AirQualityState extends State<AirQuality> {
