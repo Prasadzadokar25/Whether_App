@@ -1,10 +1,9 @@
 import 'dart:developer';
 import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/widgets.dart';
+import 'package:pweather/Model/app_data.dart';
+import 'package:pweather/Model/my_data.dart';
 import '../Controller/feach_location.dart';
 import '../Controller/whether_inherited_widget.dart';
 import '../Model/whether_data.dart';
@@ -13,6 +12,7 @@ import '../Controller/feach_data.dart';
 import '../Model/dataiterm_model.dart';
 import 'astroposition.dart';
 import 'weatherconditionicon.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,6 +24,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   double hourDataContainerWidth = 67;
   DateTime currentTime = DateTime.now();
+  bool _isHovered = false;
+
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -158,38 +160,42 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SizedBox(
                               height: 20,
                             ),
-                            Column(
-                              children: [
-                                Stack(
+                            MyHoverBackGround(
+                              radius: 10,
+                              child: GestureDetector(
+                                onTap: () {
+                                  _launchApp(url: AppData.mainTempUrl);
+                                },
+                                child: Column(
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                    Stack(
                                       children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              alignment: Alignment.center,
+                                              height: 150,
+                                              width: width / 1.5,
+                                              child: CloudAnimation(),
+                                            ),
+                                          ],
+                                        ),
                                         Container(
+                                          height: height * 0.21,
                                           alignment: Alignment.center,
-                                          height: 150,
-                                          width: width / 1.5,
-                                          child: CloudAnimation(),
+                                          child: WeatherConditionIcon(
+                                              code: whetherData
+                                                  .current!.condition!.code!,
+                                              isDay:
+                                                  whetherData.current!.isDay!),
                                         ),
                                       ],
                                     ),
-                                    Container(
-                                      height: height * 0.21,
-                                      alignment: Alignment.center,
-                                      child: WeatherConditionIcon(
-                                          code: whetherData
-                                              .current!.condition!.code!,
-                                          isDay: whetherData.current!.isDay!),
+                                    const SizedBox(
+                                      width: 20,
                                     ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  width: 25,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
                                     Container(
                                       alignment: Alignment.center,
                                       height: 100,
@@ -210,46 +216,46 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             ),
                                     ),
-                                  ],
-                                ),
-                                Text(
-                                  WhetherInheritedWidget.of(context)
-                                      .whetherData
-                                      .location!
-                                      .localtime!
-                                      .split(" ")[0],
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  width: 300,
-                                  child: Text(
-                                    (WhetherInheritedWidget.of(context)
+                                    Text(
+                                      WhetherInheritedWidget.of(context)
+                                          .whetherData
+                                          .location!
+                                          .localtime!
+                                          .split(" ")[0],
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: 300,
+                                      child: Text(
+                                        (WhetherInheritedWidget.of(context)
+                                                    .whetherData
+                                                    .current!
+                                                    .condition!
+                                                    .text !=
+                                                null)
+                                            ? WhetherInheritedWidget.of(context)
                                                 .whetherData
                                                 .current!
                                                 .condition!
-                                                .text !=
-                                            null)
-                                        ? WhetherInheritedWidget.of(context)
-                                            .whetherData
-                                            .current!
-                                            .condition!
-                                            .text!
-                                        : "No whether massege avaleble",
-                                    maxLines: 2,
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        color:
-                                            Color.fromARGB(255, 225, 222, 222),
-                                        fontSize: 23,
-                                        fontWeight: FontWeight.w500),
-                                  ),
+                                                .text!
+                                            : "No whether massege avaleble",
+                                        maxLines: 2,
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 225, 222, 222),
+                                            fontSize: 23,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                             const SizedBox(height: 30),
                             Container(
@@ -264,14 +270,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   otherInfoButton(
-                                    label: "Wind",
-                                    value:
-                                        "${whetherData.current!.windKph!.round()} km/h",
-                                    icon: const Icon(
-                                      Icons.air_rounded,
-                                      color: Color.fromARGB(255, 241, 244, 174),
-                                    ),
-                                  ),
+                                      label: "Wind",
+                                      value:
+                                          "${whetherData.current!.windKph!.round()} km/h",
+                                      icon: const Icon(
+                                        Icons.air_rounded,
+                                        color:
+                                            Color.fromARGB(255, 241, 244, 174),
+                                      ),
+                                      launchUrl: AppData.windUrl),
                                   Container(
                                     width: 1.6,
                                     height: 40,
@@ -286,7 +293,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Icons.water_drop,
                                         color:
                                             Color.fromARGB(255, 122, 217, 244),
-                                      )),
+                                      ),
+                                      launchUrl: AppData.humidityUrl),
                                   Container(
                                     width: 1.6,
                                     height: 40,
@@ -294,16 +302,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                         255, 177, 175, 175),
                                   ),
                                   otherInfoButton(
-                                    label: "Rain",
-                                    value: (whetherData
-                                            .forecast!.forecastday!.isNotEmpty)
-                                        ? "${whetherData.forecast!.forecastday![0].day!.dailyChanceOfRain}%"
-                                        : "Not avalable",
-                                    icon: const Icon(
-                                      Icons.cloud,
-                                      color: Color.fromARGB(255, 249, 249, 247),
-                                    ),
-                                  ),
+                                      label: "Rain",
+                                      value: (whetherData.forecast!.forecastday!
+                                              .isNotEmpty)
+                                          ? "${whetherData.forecast!.forecastday![0].day!.dailyChanceOfRain}%"
+                                          : "Not avalable",
+                                      icon: const Icon(
+                                        Icons.cloud,
+                                        color:
+                                            Color.fromARGB(255, 249, 249, 247),
+                                      ),
+                                      launchUrl: AppData.rainUrl),
                                 ],
                               ),
                             ),
@@ -377,46 +386,70 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                             ),
-                            Container(
-                              height: 105,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: 10,
-                              ),
-                              decoration: const BoxDecoration(
-                                color: Color.fromARGB(82, 44, 43, 43),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(18)),
-                              ),
-                              alignment: Alignment.center,
-                              child: SunPositionScreen(
-                                sunrise: parseTime(whetherData
-                                    .forecast!.forecastday![0].astro!.sunrise!),
-                                sunset: parseTime(whetherData
-                                    .forecast!.forecastday![0].astro!.sunset!),
+                            MyHoverBackGround(
+                              radius: 18,
+                              child: GestureDetector(
+                                onTap: () {
+                                  _launchApp(url: AppData.sunReportUrl);
+                                },
+                                child: Container(
+                                  height: 105,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                    vertical: 10,
+                                  ),
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromARGB(82, 44, 43, 43),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(18)),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: SunPositionScreen(
+                                    sunrise: parseTime(whetherData.forecast!
+                                        .forecastday![0].astro!.sunrise!),
+                                    sunset: parseTime(whetherData.forecast!
+                                        .forecastday![0].astro!.sunset!),
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(
                               height: 10,
                             ),
-                            Container(
-                              height: 105,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: 10,
+                            MyHoverBackGround(
+                              radius: 18,
+                              child: GestureDetector(
+                                onTap: () {
+                                  _launchApp(url: AppData.moonReportUrl);
+                                },
+                                child: Container(
+                                  height: 105,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                    vertical: 10,
+                                  ),
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromARGB(82, 44, 43, 43),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(18)),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: const MoonLocation(),
+                                ),
                               ),
-                              decoration: const BoxDecoration(
-                                color: Color.fromARGB(82, 44, 43, 43),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(18)),
-                              ),
-                              alignment: Alignment.center,
-                              child: const MoonLocation(),
                             ),
                             const SizedBox(
                               height: 15,
                             ),
-                            const AirQuality(),
+                            MyHoverBackGround(
+                              radius: 18,
+                              child: GestureDetector(
+                                onTap: () {
+                                  _launchApp(url: AppData.sunReportUrl);
+                                },
+                                child: const AirQuality(),
+                              ),
+                            ),
                             const SizedBox(child: MyGridView()),
                             const SizedBox(
                               height: 20,
@@ -458,7 +491,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    _launchApp(url: MyData.linkdinUrl);
+                                  },
                                   child: const Text(
                                     "PDevelopment",
                                     style: TextStyle(
@@ -525,33 +560,46 @@ class _HomeScreenState extends State<HomeScreen> {
     required String label,
     required String value,
     required Icon icon,
+    required String launchUrl,
   }) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Color.fromARGB(25, 236, 178, 3),
-                blurRadius: 10,
-              )
+    return MyHoverBackGround(
+      radius: 10,
+      child: GestureDetector(
+        onTap: () {
+          _launchApp(url: launchUrl);
+        },
+        child: SizedBox(
+          height: 65,
+          width: 120,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(25, 236, 178, 3),
+                      blurRadius: 10,
+                    )
+                  ],
+                ),
+                child: icon,
+              ),
+              Text(
+                value,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w600, color: Colors.white),
+              ),
+              Text(
+                label,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Color.fromARGB(255, 170, 168, 168)),
+              ),
             ],
           ),
-          child: icon,
         ),
-        Text(
-          value,
-          style:
-              const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
-        ),
-        Text(
-          label,
-          style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Color.fromARGB(255, 170, 168, 168)),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -666,40 +714,40 @@ class MyGridView extends StatelessWidget {
     WhetherData whetherData = WhetherInheritedWidget.of(context).whetherData;
     List termsInfo = [
       DataIterm(
-        label: "Pressure",
-        value: "${whetherData.current!.pressureMb!}",
-        unit: "mb",
-        icon: const Icon(
-          Icons.vertical_align_center_sharp,
-          color: Color.fromARGB(255, 239, 236, 216),
-        ),
-      ),
+          label: "Pressure",
+          value: "${whetherData.current!.pressureMb!}",
+          unit: "mb",
+          icon: const Icon(
+            Icons.vertical_align_center_sharp,
+            color: Color.fromARGB(255, 239, 236, 216),
+          ),
+          launchUrl: AppData.pressureReportUrl),
       DataIterm(
-        label: "Dew Point",
-        value: "${whetherData.current!.dewpointC!}",
-        unit: "°",
-        icon: const Icon(
-          Icons.water_drop,
-          color: Color.fromARGB(255, 239, 236, 216),
-        ),
-      ),
+          label: "Dew Point",
+          value: "${whetherData.current!.dewpointC!}",
+          unit: "°",
+          icon: const Icon(
+            Icons.water_drop,
+            color: Color.fromARGB(255, 239, 236, 216),
+          ),
+          launchUrl: AppData.dewReportUrl),
       DataIterm(
-        label: "Wind",
-        value: "${whetherData.current!.windKph!}",
-        unit: "km/hr | ${whetherData.current!.windDir}",
-        icon: const Icon(
-          Icons.air,
-          color: Color.fromARGB(255, 239, 236, 216),
-        ),
-      ),
+          label: "Wind",
+          value: "${whetherData.current!.windKph!}",
+          unit: "km/hr | ${whetherData.current!.windDir}",
+          icon: const Icon(
+            Icons.air,
+            color: Color.fromARGB(255, 239, 236, 216),
+          ),
+          launchUrl: AppData.windUrl),
       DataIterm(
-        label: "UV Index",
-        value: "${whetherData.current!.uv!}",
-        icon: const Icon(
-          Icons.sunny,
-          color: Color.fromARGB(255, 239, 236, 216),
-        ),
-      ),
+          label: "UV Index",
+          value: "${whetherData.current!.uv!}",
+          icon: const Icon(
+            Icons.sunny,
+            color: Color.fromARGB(255, 239, 236, 216),
+          ),
+          launchUrl: AppData.uvIndexReportUrl),
       DataIterm(
         label: "Visibility",
         // ignore: unnecessary_cast
@@ -731,41 +779,51 @@ class MyGridView extends StatelessWidget {
           childAspectRatio: 1.9),
       itemCount: termsInfo.length,
       itemBuilder: (context, index) {
-        return Container(
-          padding: const EdgeInsets.all(12),
-          decoration: const BoxDecoration(
-            color: Color.fromARGB(124, 38, 38, 38),
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+        DataIterm dataIterm = termsInfo[index];
+        return MyHoverBackGround(
+          radius: 20,
+          child: GestureDetector(
+            onTap: () {
+              if (dataIterm.launchUrl != null)
+                _launchApp(url: dataIterm.launchUrl!);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(124, 38, 38, 38),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  termsInfo[index].icon,
+                  Row(
+                    children: [
+                      dataIterm.icon!,
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        dataIterm.label,
+                        style: const TextStyle(
+                          color: Color.fromARGB(255, 214, 212, 212),
+                        ),
+                      )
+                    ],
+                  ),
                   const SizedBox(
-                    width: 5,
+                    height: 10,
                   ),
                   Text(
-                    termsInfo[index].label,
+                    "${dataIterm.value} ${(dataIterm.unit != null) ? dataIterm.unit : ""}",
                     style: const TextStyle(
-                      color: Color.fromARGB(255, 214, 212, 212),
-                    ),
+                        letterSpacing: 0.5,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 17),
                   )
                 ],
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                "${termsInfo[index].value} ${(termsInfo[index].unit != null) ? termsInfo[index].unit : ""}",
-                style: const TextStyle(
-                    letterSpacing: 0.5,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 17),
-              )
-            ],
+            ),
           ),
         );
       },
@@ -790,7 +848,6 @@ class _HourWeatherCardState extends State<HourWeatherCard> {
     DateTime currentTime = DateTime.now();
     return Center(
       child: Container(
-        padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.only(right: 16.7),
         height: (widget.index == currentTime.hour) ? 106 : 100,
         width: widget.cardWidth,
@@ -822,46 +879,58 @@ class _HourWeatherCardState extends State<HourWeatherCard> {
                 border:
                     Border.all(color: const Color.fromARGB(255, 60, 57, 57)),
               ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "${whetherData.forecast!.forecastday![0].hour![widget.index].tempC!.round()}°",
-              style: TextStyle(
-                color: (widget.index == currentTime.hour)
-                    ? Colors.white
-                    : const Color.fromARGB(255, 192, 190, 190),
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
+        child: MyHoverBackGround(
+          radius: 25,
+          child: GestureDetector(
+            onTap: () {
+              _launchApp(url: AppData.hourlyReportUrl);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "${whetherData.forecast!.forecastday![0].hour![widget.index].tempC!.round()}°",
+                    style: TextStyle(
+                      color: (widget.index == currentTime.hour)
+                          ? Colors.white
+                          : const Color.fromARGB(255, 192, 190, 190),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Container(
+                      height: 30,
+                      decoration: const BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromARGB(53, 224, 235, 101),
+                            blurRadius: 15,
+                          )
+                        ],
+                      ),
+                      child: WeatherConditionIcon(
+                          code: whetherData.forecast!.forecastday![0]
+                              .hour![widget.index].condition!.code!,
+                          isDay: whetherData.forecast!.forecastday![0]
+                              .hour![widget.index].isDay!)),
+                  Text(
+                    whetherData
+                        .forecast!.forecastday![0].hour![widget.index].time!
+                        .split(" ")[1],
+                    style: TextStyle(
+                      color: (widget.index == currentTime.hour)
+                          ? Colors.white
+                          : const Color.fromARGB(255, 192, 190, 190),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
               ),
             ),
-            Container(
-                height: 30,
-                decoration: const BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromARGB(53, 224, 235, 101),
-                      blurRadius: 15,
-                    )
-                  ],
-                ),
-                child: WeatherConditionIcon(
-                    code: whetherData.forecast!.forecastday![0]
-                        .hour![widget.index].condition!.code!,
-                    isDay: whetherData
-                        .forecast!.forecastday![0].hour![widget.index].isDay!)),
-            Text(
-              whetherData.forecast!.forecastday![0].hour![widget.index].time!
-                  .split(" ")[1],
-              style: TextStyle(
-                color: (widget.index == currentTime.hour)
-                    ? Colors.white
-                    : const Color.fromARGB(255, 192, 190, 190),
-                fontWeight: FontWeight.w500,
-                fontSize: 11,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -919,5 +988,52 @@ class TemperatureChart extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class MyHoverBackGround extends StatefulWidget {
+  Widget? child;
+  double radius;
+  MyHoverBackGround({super.key, this.child, this.radius = 3});
+  State createState() => _MyHoverBackGround();
+}
+
+class _MyHoverBackGround extends State<MyHoverBackGround> {
+  bool _isHovered = false;
+
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        padding: EdgeInsets.all(0),
+        decoration: BoxDecoration(
+          color: _isHovered
+              ? Color.fromARGB(46, 240, 233, 230)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(widget.radius),
+          boxShadow: [
+            if (_isHovered)
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 10,
+              ),
+          ],
+        ),
+        child: widget.child,
+      ),
+    );
+  }
+}
+
+void _launchApp({required String url}) async {
+  const fallbackUrl = MyData.linkdinUrl;
+
+  try {
+    bool launched =
+        await launch(url, forceSafariVC: false, forceWebView: false);
+  } catch (e) {
+    await launch(fallbackUrl, forceSafariVC: false, forceWebView: false);
   }
 }

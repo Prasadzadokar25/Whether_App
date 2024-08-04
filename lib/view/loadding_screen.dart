@@ -10,7 +10,7 @@ class MyLoader extends StatefulWidget {
 }
 
 class _MyLoaderState extends State<MyLoader> {
-  String videoUrl = loadingAimationVideoUrl;
+  String videoUrl = MyData.loadingAimationVideoUrl;
 
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;

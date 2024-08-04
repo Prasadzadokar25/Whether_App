@@ -18,7 +18,7 @@ class FeachData {
     double longitude = position.longitude;
 
     String wetherApiUrl =
-        "https://api.weatherapi.com/v1/forecast.json?key=$apiKey&q=$latitude,$longitude&days=1&aqi=yes&alerts=yes";
+        "https://api.weatherapi.com/v1/forecast.json?key=${MyData.apiKey}&q=$latitude,$longitude&days=10&aqi=yes&alerts=yes";
     Uri uri = Uri.parse(wetherApiUrl);
     http.Response response = await http.get(uri);
     log(response.body);

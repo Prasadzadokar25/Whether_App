@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pweather/view/home_screen.dart';
 import 'landing_page.dart';
 
 class SplashScreen extends StatefulWidget {

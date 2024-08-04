@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pweather/Model/my_data.dart';
 import 'package:pweather/view/weatherconditionicon.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../Controller/whether_inherited_widget.dart';
 import '../Model/whether_data.dart';
 import '../view/home_screen.dart';
@@ -231,12 +233,22 @@ class _MyDrawerState extends State<MyDrawer> {
                           padding: EdgeInsets.all(5.0),
                           child: Divider(),
                         ),
-                        const ListTile(
-                          title: Text(
+                        ListTile(
+                          onTap: () {
+                            final Uri feedbackUri = Uri(
+                              scheme: 'mailto',
+                              path: 'pnews.prasadzadokar@gmail.com',
+                              queryParameters: {
+                                'subject': 'Feedback for PNews App'
+                              },
+                            );
+                            _launchUrl(feedbackUri.toString());
+                          },
+                          title: const Text(
                             "Report wrong location",
                             style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
-                          leading: Icon(
+                          leading: const Icon(
                             Icons.error_outline_outlined,
                             color: Colors.white60,
                           ),
@@ -247,7 +259,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(top: 30, left: 10, right: 10),
+                padding: const EdgeInsets.only(top: 30, left: 10, right: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -284,20 +296,28 @@ class _MyDrawerState extends State<MyDrawer> {
 
   Widget getSocialMediaButton({required String iconyurl, required launchUrl}) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        _launchUrl(launchUrl);
+      },
       child: Container(
         height: 36,
         width: 36,
         decoration: const BoxDecoration(
             color: Color.fromARGB(255, 0, 0, 0), shape: BoxShape.circle),
         child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(30)),
+            borderRadius: const BorderRadius.all(Radius.circular(30)),
             child: Image.asset(iconyurl)),
       ),
     );
   }
+}
 
-  void _launchUrl(String url) async {
-    // await launchUrlString(url);
+void _launchUrl(String url) async {
+  const fallbackUrl = MyData.linkdinUrl;
+
+  try {
+    await launch(url, forceSafariVC: false, forceWebView: false);
+  } catch (e) {
+    await launch(fallbackUrl, forceSafariVC: false, forceWebView: false);
   }
 }
