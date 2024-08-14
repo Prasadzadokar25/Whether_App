@@ -15,7 +15,8 @@ class _ThermalViewPageState extends State<ThermalViewPage> {
     return Center(
       child: WebView(
         javascriptMode: JavascriptMode.unrestricted,
-        initialUrl: "https://zoom.earth/",
+        initialUrl:
+            "https://zoom.earth/maps/temperature/#view=19.84,72.43,5z/model=icon",
         onPageStarted: (url) {
           setState(() {
             isPageLoading = true;

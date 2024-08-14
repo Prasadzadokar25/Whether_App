@@ -1,14 +1,20 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pweather/Model/my_data.dart';
+import 'package:pweather/view/new_city_weather.dart';
 import 'package:pweather/view/weatherconditionicon.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../Controller/whether_inherited_widget.dart';
+import '../Model/city_info_model.dart';
 import '../Model/whether_data.dart';
 import '../view/home_screen.dart';
 import '../view/radar_view_android.dart';
 import 'navigation_bar.dart';
 import 'setting_page.dart';
+import 'dart:convert';
 // import 'package:url_launcher/url_launcher.dart';
 
 /// Copyright (c) 2024 PDevelopment
@@ -120,15 +126,32 @@ class MyDrawer extends StatefulWidget {
 }
 
 class _MyDrawerState extends State<MyDrawer> {
-  final List<String> cities = [
-    'New York',
-    'Los Angeles',
-    'Chicago',
-    'Los Angeles',
-    'Los Angeles',
+  Citys? citys = Citys.fromJson({"citys": []});
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
 
-    // Add more cities here or fetch from an API
-  ];
+  void getData() async {
+    citys = await feactCitysFromLocalStorage();
+    setState(() {});
+  }
+
+  Future<Citys?> feactCitysFromLocalStorage() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // prefs.setString("citys",
+    //     '{"citys":[{"name":"pune","weather":{}},{"name":"mumbai","weather":{}},{"name":"akola","weather":{}}]}');
+
+    if (prefs.containsKey("citys")) {
+      String? citysString = prefs.getString("citys");
+      Map<dynamic, dynamic> citysMap = jsonDecode(citysString!);
+      return Citys.fromJson(citysMap);
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     WhetherData whetherData = WhetherInheritedWidget.of(context).whetherData;
@@ -164,7 +187,10 @@ class _MyDrawerState extends State<MyDrawer> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    color: const Color.fromARGB(255, 243, 242, 242),
+                    onPressed: () {
+                      navigateToCitySearchPage();
+                    },
                     icon: const Icon(
                       Icons.search_rounded,
                       color: Color.fromARGB(255, 243, 240, 229),
@@ -172,6 +198,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     ),
                   ),
                   IconButton(
+                    color: const Color.fromARGB(255, 243, 242, 242),
                     onPressed: () {},
                     icon: const Icon(
                       Icons.settings,
@@ -194,11 +221,12 @@ class _MyDrawerState extends State<MyDrawer> {
                       children: [
                         Column(
                           children: List.generate(
-                            cities.length,
+                            citys!.citys!.length,
                             (index) {
+                              City city = citys!.citys![index];
                               return ListTile(
                                 title: Text(
-                                  cities[index],
+                                  city.name!,
                                   style: const TextStyle(
                                       color: Colors.white, fontSize: 14.5),
                                 ),
@@ -292,6 +320,12 @@ class _MyDrawerState extends State<MyDrawer> {
         )
       ],
     );
+  }
+
+  void navigateToCitySearchPage() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return CitySearch();
+    }));
   }
 
   Widget getSocialMediaButton({required String iconyurl, required launchUrl}) {

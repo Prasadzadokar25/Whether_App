@@ -167,6 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   _launchApp(url: AppData.mainTempUrl);
                                 },
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Stack(
                                       children: [
@@ -183,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ],
                                         ),
                                         Container(
-                                          height: height * 0.21,
+                                          height: height * 0.19,
                                           alignment: Alignment.center,
                                           child: WeatherConditionIcon(
                                               code: whetherData
