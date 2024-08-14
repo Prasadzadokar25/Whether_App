@@ -197,7 +197,6 @@ class _MyDrawerState extends State<MyDrawer> {
                             cities.length,
                             (index) {
                               return ListTile(
-                                autofocus: true,
                                 title: Text(
                                   cities[index],
                                   style: const TextStyle(
@@ -239,7 +238,8 @@ class _MyDrawerState extends State<MyDrawer> {
                               scheme: 'mailto',
                               path: 'pnews.prasadzadokar@gmail.com',
                               queryParameters: {
-                                'subject': 'Feedback for PNews App'
+                                'subject':
+                                    'Reporting wrong location in PWeather'
                               },
                             );
                             _launchUrl(feedbackUri.toString());

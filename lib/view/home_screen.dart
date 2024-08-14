@@ -562,6 +562,10 @@ class _HomeScreenState extends State<HomeScreen> {
     required Icon icon,
     required String launchUrl,
   }) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    // ignore: unused_local_variable
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return MyHoverBackGround(
       radius: 10,
       child: GestureDetector(
@@ -570,7 +574,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         child: SizedBox(
           height: 65,
-          width: 120,
+          width: screenWidth * 0.25,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -784,8 +788,9 @@ class MyGridView extends StatelessWidget {
           radius: 20,
           child: GestureDetector(
             onTap: () {
-              if (dataIterm.launchUrl != null)
+              if (dataIterm.launchUrl != null) {
                 _launchApp(url: dataIterm.launchUrl!);
+              }
             },
             child: Container(
               padding: const EdgeInsets.all(12),
@@ -815,6 +820,8 @@ class MyGridView extends StatelessWidget {
                   ),
                   Text(
                     "${dataIterm.value} ${(dataIterm.unit != null) ? dataIterm.unit : ""}",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                         letterSpacing: 0.5,
                         color: Colors.white,
@@ -992,25 +999,27 @@ class TemperatureChart extends StatelessWidget {
 }
 
 class MyHoverBackGround extends StatefulWidget {
-  Widget? child;
-  double radius;
-  MyHoverBackGround({super.key, this.child, this.radius = 3});
+  final Widget? child;
+  final double radius;
+  const MyHoverBackGround({super.key, this.child, this.radius = 3});
+  @override
   State createState() => _MyHoverBackGround();
 }
 
 class _MyHoverBackGround extends State<MyHoverBackGround> {
   bool _isHovered = false;
 
+  @override
   Widget build(BuildContext context) {
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
-        padding: EdgeInsets.all(0),
+        duration: const Duration(milliseconds: 300),
+        padding: const EdgeInsets.all(0),
         decoration: BoxDecoration(
           color: _isHovered
-              ? Color.fromARGB(46, 240, 233, 230)
+              ? const Color.fromARGB(46, 240, 233, 230)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(widget.radius),
           boxShadow: [
@@ -1031,9 +1040,10 @@ void _launchApp({required String url}) async {
   const fallbackUrl = MyData.linkdinUrl;
 
   try {
-    bool launched =
-        await launch(url, forceSafariVC: false, forceWebView: false);
+    // ignore: deprecated_member_use
+    await launch(url, forceSafariVC: false, forceWebView: false);
   } catch (e) {
+    // ignore: deprecated_member_use
     await launch(fallbackUrl, forceSafariVC: false, forceWebView: false);
   }
 }
