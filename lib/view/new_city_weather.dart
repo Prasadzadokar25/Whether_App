@@ -33,6 +33,14 @@ class _CitySearchWidgetState extends State<CitySearch> {
           onSelected: (Map<String, dynamic> selection) {
             // Handle the selected city map
             print('Selected: ${selection['name']}');
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return const AlertDialog(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    title: Text("prasad"),
+                  );
+                });
           },
           fieldViewBuilder: (
             BuildContext context,
