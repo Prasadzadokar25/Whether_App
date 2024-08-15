@@ -6,41 +6,46 @@ class Citys {
   Citys({this.citys});
 
   Citys.fromJson(Map<dynamic, dynamic> json) {
-    if (json['citys'] != null) {
+    if (json['data'] != null) {
       citys = <City>[];
-      json['citys'].forEach((v) {
+      json['data'].forEach((v) {
         citys!.add(City.fromJson(v));
       });
     }
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (citys != null) {
-      data['citys'] = citys!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
 }
 
 class City {
+  int? id;
+  String? wikiDataId;
+  String? type;
+  String? city;
   String? name;
+  String? country;
+  String? countryCode;
+  String? region;
+  String? regionCode;
+  String? regionWdId;
+  double? latitude;
+  double? longitude;
+  int? population;
   WhetherData? weather;
-
-  City({this.name, this.weather});
 
   City.fromJson(Map<String, dynamic> json) {
     name = json['name'];
+    id = json['id'];
+    wikiDataId = json['wikiDataId'];
+    type = json['type'];
+    city = json['city'];
+    country = json["country"];
+    countryCode = json["countryCode"];
+    region = json["region"];
+    regionCode = json["regionCode"];
+    regionWdId = json["regionWdId"];
+    latitude = json["latitude"];
+    longitude = json["longitude"];
+    population = json["population"];
     weather =
         json['weather'] != null ? WhetherData.fromJson(json['weather']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['name'] = name;
-    if (weather != null) {
-      data['weather'] = weather!.toJson();
-    }
-    return data;
   }
 }

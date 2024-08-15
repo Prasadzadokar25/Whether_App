@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../Controller/feach_data.dart';
+import '../Controller/feach_location.dart';
+import '../Model/app_data.dart';
+import '../Model/whether_data.dart';
 import 'landing_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -9,6 +15,15 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool isLocationServiceEnabled = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadWeatherData();
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -21,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             children: [
               SizedBox(
-                height: height * 0.21,
+                height: height * 0.2,
               ),
               Container(
                 width: double.infinity,
@@ -30,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   children: [
                     SizedBox(
                       width: double.infinity,
-                      height: height * 0.24,
+                      height: height * 0.22,
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -101,7 +116,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(
-                height: 15,
+                height: 13,
               ),
               const Text(
                 "Get to know your weather maps and\nradar precipitation forecast",
@@ -110,16 +125,43 @@ class _SplashScreenState extends State<SplashScreen> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(
-                height: height * 0.13,
+                height: height * 0.11,
               ),
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return const LandingPage();
-                    }));
+                  onTap: () async {
+                    if (isLocationServiceEnabled) {
+                      Navigator.of(context).push(_createRoute());
+                      final prefs = await SharedPreferences.getInstance();
+                      prefs.setBool("isInstalled", true);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          behavior: SnackBarBehavior.fixed,
+                          backgroundColor: Color.fromARGB(238, 255, 176, 139),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                            ),
+                          ),
+                          content: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Please enable Location permission",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16,
+                                    color: Color.fromARGB(255, 54, 54, 54)),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                      _loadWeatherData();
+                    }
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -171,5 +213,28 @@ class _SplashScreenState extends State<SplashScreen> {
         );
       },
     );
+  }
+
+  Future<void> _loadWeatherData() async {
+    WhetherData? savedData = await FeachData.feachLocalWheatherInfo();
+    if (savedData != null) {
+      setState(() {
+        Data.whetherData = savedData;
+      });
+    }
+    Position? position;
+    try {
+      position = await FeachLocation.determinePosition();
+    } catch (e) {
+      setState(() {
+        isLocationServiceEnabled = false;
+      });
+    }
+    try {
+      WhetherData newData = await FeachData.feachWetherInfo(position!);
+      setState(() {
+        Data.whetherData = newData;
+      });
+    } catch (e) {}
   }
 }

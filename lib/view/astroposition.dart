@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../Controller/whether_inherited_widget.dart';
+import 'package:pweather/Model/app_data.dart';
 import '../Model/imagepaths.dart';
-
 
 class SunPositionScreen extends StatefulWidget {
   final DateTime sunrise;
@@ -190,12 +189,8 @@ class _MoonLocationState extends State<MoonLocation> {
             children: [
               getSunRiseSunSetLabel(
                 lable: "Moonrise",
-                time: WhetherInheritedWidget.of(context)
-                    .whetherData
-                    .forecast!
-                    .forecastday![0]
-                    .astro!
-                    .moonrise!,
+                time: Data
+                    .whetherData!.forecast!.forecastday![0].astro!.moonrise!,
               ),
               Column(
                 children: [
@@ -207,11 +202,7 @@ class _MoonLocationState extends State<MoonLocation> {
                     height: 5,
                   ),
                   Text(
-                    WhetherInheritedWidget.of(context)
-                        .whetherData
-                        .forecast!
-                        .forecastday![0]
-                        .astro!
+                    Data.whetherData!.forecast!.forecastday![0].astro!
                         .moonPhase!,
                     style: const TextStyle(
                       fontSize: 12,
@@ -222,12 +213,8 @@ class _MoonLocationState extends State<MoonLocation> {
               ),
               getSunRiseSunSetLabel(
                 lable: "Moonset",
-                time: WhetherInheritedWidget.of(context)
-                    .whetherData
-                    .forecast!
-                    .forecastday![0]
-                    .astro!
-                    .moonset!,
+                time:
+                    Data.whetherData!.forecast!.forecastday![0].astro!.moonset!,
               ),
             ],
           ),

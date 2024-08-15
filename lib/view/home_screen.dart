@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:pweather/Model/app_data.dart';
+import 'package:pweather/Model/webL_links.dart';
 import 'package:pweather/Model/my_data.dart';
 import '../Controller/feach_location.dart';
-import '../Controller/whether_inherited_widget.dart';
 import '../Model/whether_data.dart';
 import '../view/whetheranimation.dart';
 import '../Controller/feach_data.dart';
@@ -24,7 +24,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   double hourDataContainerWidth = 67;
   DateTime currentTime = DateTime.now();
-  bool _isHovered = false;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -42,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final whetherData = await FeachData.feachWetherInfo(
         await FeachLocation.determinePosition());
     setState(() {
-      WhetherInheritedWidget.of(context).whetherData = whetherData;
+      Data.whetherData = whetherData;
       log("${whetherData.toJson()['current']['temp_c']}");
     });
   }
@@ -50,12 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _scrollToCurrentHour() async {
     int currentHour = currentTime.hour;
     double itemWidth = hourDataContainerWidth;
-    if (WhetherInheritedWidget.of(context)
-        .whetherData
-        .forecast!
-        .forecastday![0]
-        .hour!
-        .isNotEmpty) {
+    if (Data.whetherData!.forecast!.forecastday![0].hour!.isNotEmpty) {
       _scrollController.animateTo(
         currentHour * itemWidth * 1.1,
         duration: const Duration(seconds: 4),
@@ -66,71 +60,38 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    WhetherData whetherData = WhetherInheritedWidget.of(context).whetherData;
+    WhetherData? whetherData = Data.whetherData;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    return (whetherData.current != null)
+    return (whetherData!.current != null)
         ? Scaffold(
             backgroundColor: const Color.fromARGB(255, 19, 19, 19),
             extendBodyBehindAppBar: true,
-            // appBar: AppBar(
-            //   backgroundColor: Colors.transparent,
-            //   elevation: 0,
-            //   systemOverlayStyle: const SystemUiOverlayStyle(
-            //       statusBarBrightness: Brightness.dark),
-            //   centerTitle: true,
-            //   title: Row(
-            //     mainAxisAlignment: MainAxisAlignment.start,
-            //     children: [
-            //       const Icon(
-            //         Icons.location_pin,
-            //         color: Colors.white,
-            //         size: 23,
-            //       ),
-            //       const SizedBox(
-            //         width: 5,
-            //       ),
-            //       Text(
-            //         whetherData.location!.name!,
-            //         style: const TextStyle(
-            //           color: Colors.white,
-            //           fontWeight: FontWeight.w500,
-            //           fontSize: 22,
-            //         ),
-            //       )
-            //     ],
-            //   ),
-            //   iconTheme: const IconThemeData(color: Colors.white),
-            // ),
-            // drawer: const Drawer(
-            //   backgroundColor: Colors.black,
-            //   child: MyDrawer(),
-            // ),
             body: Padding(
               padding: const EdgeInsets.fromLTRB(18, kToolbarHeight, 18, 8),
               child: SizedBox(
                 height: height,
                 child: Stack(
                   children: [
-                    // Align(
-                    //   alignment: const AlignmentDirectional(3, -0.3),
-                    //   child: Container(
-                    //     height: 300,
-                    //     width: width * 0.9,
-                    //     decoration: const BoxDecoration(
-                    //         shape: BoxShape.circle, color: Colors.deepPurple),
-                    //   ),
-                    // ),
-                    // Align(
-                    //   alignment: const AlignmentDirectional(-3, -0.3),
-                    //   child: Container(
-                    //     height: 300,
-                    //     width: width * 0.9,
-                    //     decoration: const BoxDecoration(
-                    //         shape: BoxShape.circle, color: Color(0xFF673AB7)),
-                    //   ),
-                    // ),
+                    Align(
+                      alignment: const AlignmentDirectional(3, -0.3),
+                      child: Container(
+                        height: 300,
+                        width: width * 0.9,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle, color: Colors.deepPurple),
+                      ),
+                    ),
+                    Align(
+                      alignment: const AlignmentDirectional(-3, -0.3),
+                      child: Container(
+                        height: 300,
+                        width: width * 0.9,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle, color: Color(0xFF673AB7)),
+                      ),
+                    ),
                     Align(
                       alignment: const AlignmentDirectional(0, -0.85),
                       child: Container(
@@ -149,9 +110,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     RefreshIndicator(
                       onRefresh: () async {
-                        WhetherInheritedWidget.of(context).whetherData =
-                            await FeachData.feachWetherInfo(
-                                await FeachLocation.determinePosition());
+                        Data.whetherData = await FeachData.feachWetherInfo(
+                            await FeachLocation.determinePosition());
                       },
                       child: SingleChildScrollView(
                         child: Column(
@@ -218,10 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                     ),
                                     Text(
-                                      WhetherInheritedWidget.of(context)
-                                          .whetherData
-                                          .location!
-                                          .localtime!
+                                      Data.whetherData!.location!.localtime!
                                           .split(" ")[0],
                                       style: const TextStyle(
                                           color: Colors.white,
@@ -232,17 +189,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       alignment: Alignment.center,
                                       width: 300,
                                       child: Text(
-                                        (WhetherInheritedWidget.of(context)
-                                                    .whetherData
-                                                    .current!
-                                                    .condition!
+                                        (Data.whetherData!.current!.condition!
                                                     .text !=
                                                 null)
-                                            ? WhetherInheritedWidget.of(context)
-                                                .whetherData
-                                                .current!
-                                                .condition!
-                                                .text!
+                                            ? Data.whetherData!.current!
+                                                .condition!.text!
                                             : "No whether massege avaleble",
                                         maxLines: 2,
                                         textAlign: TextAlign.center,
@@ -620,10 +571,10 @@ class AirQuality extends StatefulWidget {
 class _AirQualityState extends State<AirQuality> {
   @override
   Widget build(BuildContext context) {
-    WhetherData whetherData = WhetherInheritedWidget.of(context).whetherData;
+    WhetherData? whetherData = Data.whetherData;
     int usEpaIndex = 1;
-    if (whetherData.current!.airQuality != null &&
-        whetherData.current!.airQuality!.usEpaIndex != null) {
+    if (whetherData!.current!.airQuality != null &&
+        whetherData!.current!.airQuality!.usEpaIndex != null) {
       usEpaIndex = whetherData.current!.airQuality!.usEpaIndex!;
     }
     double width = MediaQuery.of(context).size.width;
@@ -716,7 +667,7 @@ class MyGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WhetherData whetherData = WhetherInheritedWidget.of(context).whetherData;
+    WhetherData whetherData = Data.whetherData!;
     List termsInfo = [
       DataIterm(
           label: "Pressure",
@@ -852,7 +803,7 @@ class HourWeatherCard extends StatefulWidget {
 class _HourWeatherCardState extends State<HourWeatherCard> {
   @override
   Widget build(BuildContext context) {
-    WhetherData whetherData = WhetherInheritedWidget.of(context).whetherData;
+    WhetherData whetherData = Data.whetherData!;
     DateTime currentTime = DateTime.now();
     return Center(
       child: Container(

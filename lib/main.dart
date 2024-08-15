@@ -4,20 +4,11 @@ import 'package:pweather/view/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Controller/feach_data.dart';
 import '../Controller/feach_location.dart';
-import '../Controller/whether_inherited_widget.dart';
 import '../Model/whether_data.dart';
 import '../view/landing_page.dart';
+import 'Model/app_data.dart';
 
-class Starting extends StatefulWidget {
-  State createState() => _StartingState();
-}
 
-class _StartingState extends State {
-  @override
-  Widget build(BuildContext context) {
-    return MyApp2();
-  }
-}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -41,8 +32,9 @@ class MyApp2 extends StatefulWidget {
 
 // MyApp widget
 class _MyApp2State extends State {
-  WhetherData? whetherData;
-  bool isInstalled = false;
+  // WhetherData? whetherData;
+  bool? isInstalled ;
+  bool isLocationServiceEnabled = true;
   @override
   void initState() {
     super.initState();
@@ -54,16 +46,17 @@ class _MyApp2State extends State {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey("isInstalled")) {
       isInstalled = prefs.getBool("isInstalled")!;
+    }else{
+      isInstalled=false;
     }
     setState(() {});
   }
 
-  bool isLocationServiceEnabled = true;
   Future<void> _loadWeatherData() async {
     WhetherData? savedData = await FeachData.feachLocalWheatherInfo();
     if (savedData != null) {
       setState(() {
-        whetherData = savedData;
+        Data.whetherData = savedData;
       });
     }
     Position? position;
@@ -72,28 +65,29 @@ class _MyApp2State extends State {
     } catch (e) {
       isLocationServiceEnabled = false;
     }
+    try{
     WhetherData newData = await FeachData.feachWetherInfo(position!);
-    setState(() {
-      whetherData = newData;
+     setState(() {
+      Data.whetherData = newData;
     });
+    }catch(e){
+      
+    }
+   
   }
 
   @override
   Widget build(BuildContext context) {
-    return whetherData != null
-        ? WhetherInheritedWidget(
-            whetherData: whetherData!,
-            child: const LandingPage(),
-          )
-        : (!isLocationServiceEnabled)
-            ? const Text(
-                "please cheach intwork\n this module required location access",
-                textAlign: TextAlign.center,
-              )
-            : const Center(child: CircularProgressIndicator());
+    return (isInstalled!=null )?(isInstalled!) ? const LandingPage() : const SplashScreen():const Center(child: CircularProgressIndicator(),);
+    // : (!isLocationServiceEnabled)
+    //     ? const Text(
+    //         "please cheach intwork\n this module required location access",
+    //         textAlign: TextAlign.center,
+    //       )
+    //     : const Center(child: CircularProgressIndicator());
   }
 }
 
 void main() {
-  runApp(Starting());
+  runApp(const MyApp());
 }
