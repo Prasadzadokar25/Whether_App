@@ -13,7 +13,6 @@ Future<void> storeCurrentWhetherData(String value) async {
 
 class FeachData {
   static Future<WhetherData> feachWetherInfo(Position position) async {
-    // Replace with your test API key
     double latitude = position.latitude;
     double longitude = position.longitude;
 

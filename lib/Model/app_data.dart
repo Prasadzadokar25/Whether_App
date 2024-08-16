@@ -1,5 +1,7 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:pweather/Model/whether_data.dart';
 
-class Data{
+class Data {
   static WhetherData? whetherData;
+  static Position? position;
 }

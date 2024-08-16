@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:pweather/Model/app_data.dart';
+import '../Controller/feach_location.dart';
 import '../Model/imagepaths.dart';
 
 class SunPositionScreen extends StatefulWidget {
@@ -265,4 +267,9 @@ Widget getSunRiseSunSetLabel({required String lable, required String time}) {
       ),
     ],
   );
+}
+
+
+void feachUserLocation()async{
+   Position? position = await FeachLocation.determinePosition();
 }

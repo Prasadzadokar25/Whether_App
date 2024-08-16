@@ -8,8 +8,6 @@ import '../Model/whether_data.dart';
 import '../view/landing_page.dart';
 import 'Model/app_data.dart';
 
-
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -33,7 +31,7 @@ class MyApp2 extends StatefulWidget {
 // MyApp widget
 class _MyApp2State extends State {
   // WhetherData? whetherData;
-  bool? isInstalled ;
+  bool? isInstalled;
   bool isLocationServiceEnabled = true;
   @override
   void initState() {
@@ -46,8 +44,8 @@ class _MyApp2State extends State {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey("isInstalled")) {
       isInstalled = prefs.getBool("isInstalled")!;
-    }else{
-      isInstalled=false;
+    } else {
+      isInstalled = false;
     }
     setState(() {});
   }
@@ -62,29 +60,27 @@ class _MyApp2State extends State {
     Position? position;
     try {
       position = await FeachLocation.determinePosition();
+      Data.position = position;
     } catch (e) {
       isLocationServiceEnabled = false;
     }
-    try{
-    WhetherData newData = await FeachData.feachWetherInfo(position!);
-     setState(() {
-      Data.whetherData = newData;
-    });
-    }catch(e){
-      
-    }
-   
+    try {
+      WhetherData newData = await FeachData.feachWetherInfo(position!);
+      setState(() {
+        Data.whetherData = newData;
+      });
+    } catch (e) {}
   }
 
   @override
   Widget build(BuildContext context) {
-    return (isInstalled!=null )?(isInstalled!) ? const LandingPage() : const SplashScreen():const Center(child: CircularProgressIndicator(),);
-    // : (!isLocationServiceEnabled)
-    //     ? const Text(
-    //         "please cheach intwork\n this module required location access",
-    //         textAlign: TextAlign.center,
-    //       )
-    //     : const Center(child: CircularProgressIndicator());
+    return (isInstalled != null)
+        ? (isInstalled!)
+            ? const LandingPage()
+            : const SplashScreen()
+        : const Center(
+            child: CircularProgressIndicator(),
+          );
   }
 }
 

@@ -132,7 +132,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: GestureDetector(
                   onTap: () async {
                     if (isLocationServiceEnabled) {
-                      Navigator.of(context).push(_createRoute());
+                      Navigator.of(context).pushReplacement(_createRoute());
                       final prefs = await SharedPreferences.getInstance();
                       prefs.setBool("isInstalled", true);
                     } else {

@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pweather/Model/app_data.dart';
 import 'package:pweather/Model/my_data.dart';
-import 'package:pweather/view/new_city_weather.dart';
+import 'package:pweather/view/city_search.dart';
 import 'package:pweather/view/weatherconditionicon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -132,6 +132,7 @@ class _LandingPageState extends State<LandingPage> {
     Position? position;
     try {
       position = await FeachLocation.determinePosition();
+      Data.position = position;
     } catch (e) {
       isLocationServiceEnabled = false;
     }
@@ -225,7 +226,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        if (citys != null)
+                        if (citys != null && citys!.citys != null)
                           Column(
                             children: List.generate(
                               citys!.citys!.length,

@@ -112,6 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onRefresh: () async {
                         Data.whetherData = await FeachData.feachWetherInfo(
                             await FeachLocation.determinePosition());
+                        setState(() {});
                       },
                       child: SingleChildScrollView(
                         child: Column(
