@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final whetherData = await FeachData.feachWetherInfo(
         await FeachLocation.determinePosition());
     setState(() {
-      Data.whetherData = whetherData;
+      //  Data.whetherData = whetherData;
       log("${whetherData.toJson()['current']['temp_c']}");
     });
   }
@@ -575,7 +575,7 @@ class _AirQualityState extends State<AirQuality> {
     WhetherData? whetherData = Data.whetherData;
     int usEpaIndex = 1;
     if (whetherData!.current!.airQuality != null &&
-        whetherData!.current!.airQuality!.usEpaIndex != null) {
+        whetherData.current!.airQuality!.usEpaIndex != null) {
       usEpaIndex = whetherData.current!.airQuality!.usEpaIndex!;
     }
     double width = MediaQuery.of(context).size.width;

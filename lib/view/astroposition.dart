@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:pweather/Model/app_data.dart';
-import '../Controller/feach_location.dart';
 import '../Model/imagepaths.dart';
 
 class SunPositionScreen extends StatefulWidget {
@@ -34,8 +32,7 @@ class _SunPositionScreenState extends State<SunPositionScreen> {
   }
 
   double calculateSunPosition(DateTime sunrise, DateTime sunset) {
-    print(sunrise.toString());
-    print(sunset.toString());
+ 
     final now = DateTime.now();
     final totalDaylight = sunset.difference(sunrise).inMinutes;
     final passedTime = now.difference(sunrise).inMinutes;
@@ -200,7 +197,7 @@ class _MoonLocationState extends State<MoonLocation> {
                     Paths.moon,
                     height: 55,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Text(
@@ -270,6 +267,4 @@ Widget getSunRiseSunSetLabel({required String lable, required String time}) {
 }
 
 
-void feachUserLocation()async{
-   Position? position = await FeachLocation.determinePosition();
-}
+

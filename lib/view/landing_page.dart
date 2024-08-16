@@ -1,5 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -38,15 +40,13 @@ class _LandingPageState extends State<LandingPage> {
   @override
   initState() {
     super.initState();
-    _loadWeatherData();
+    //_loadWeatherData();
   }
 
   @override
   Widget build(BuildContext context) {
     WhetherData? whetherData = Data.whetherData;
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-
+   
     return (Data.whetherData != null)
         ? Scaffold(
             drawer: const Drawer(
@@ -105,7 +105,7 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                   FlashyTabBarItem(
                     icon: const Icon(Icons.event),
-                    title: const Text('10 days'),
+                    title: const Text('7 days'),
                   ),
                   FlashyTabBarItem(
                     icon: const Icon(Icons.satellite_alt),
@@ -163,17 +163,30 @@ class _MyDrawerState extends State<MyDrawer> {
   void getData() async {
     citys = await feactCitysFromLocalStorage();
     setState(() {});
+    citys = await feachWeatherDataForAllCitys(citys!);
+    setState(() {});
+  }
+
+  Future<Citys> feachWeatherDataForAllCitys(Citys citys) async {
+    for (int itr = 0; itr < citys.citys!.length; itr++) {
+      citys.citys![itr].weather = await FeachData.feachWetherInfoByLonLan(
+          longitude: citys.citys![itr].longitude!,
+          latitude: citys.citys![itr].latitude!);
+    }
+
+    return citys;
   }
 
   Future<Citys?> feactCitysFromLocalStorage() async {
     final prefs = await SharedPreferences.getInstance();
 
-    // prefs.setString("citys",
-    //     '{"citys":[{"name":"pune","weather":{}},{"name":"mumbai","weather":{}},{"name":"akola","weather":{}}]}');
-
     if (prefs.containsKey("citys")) {
       String? citysString = prefs.getString("citys");
-      Map<dynamic, dynamic> citysMap = jsonDecode(citysString!);
+      log(citysString!);
+      Map<dynamic, dynamic> citysMap = jsonDecode(citysString);
+
+      log(jsonEncode(citysMap));
+
       return Citys.fromJson(citysMap);
     }
     return null;
@@ -181,7 +194,6 @@ class _MyDrawerState extends State<MyDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    WhetherData whetherData = Data.whetherData!;
 
     return Column(
       children: [
@@ -196,6 +208,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   IconButton(
                     color: const Color.fromARGB(255, 243, 242, 242),
                     onPressed: () {
+                      Navigator.of(context).pop();
                       navigateToCitySearchPage();
                     },
                     icon: const Icon(
@@ -233,6 +246,13 @@ class _MyDrawerState extends State<MyDrawer> {
                               (index) {
                                 City city = citys!.citys![index];
                                 return ListTile(
+                                  onTap: () {
+                                    Data.whetherData = city.weather!;
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(builder: (context) {
+                                      return const LandingPage();
+                                    }));
+                                  },
                                   title: Text(
                                     city.name!,
                                     style: const TextStyle(
@@ -240,19 +260,27 @@ class _MyDrawerState extends State<MyDrawer> {
                                   ),
                                   trailing: SizedBox(
                                     height: 24,
-                                    width: 55,
+                                    width: 65,
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        WeatherConditionIcon(
-                                          code: whetherData
-                                              .current!.condition!.code!,
-                                          isDay: whetherData.current!.isDay!,
+                                        (city.weather != null)
+                                            ? WeatherConditionIcon(
+                                                code: city.weather!.current!
+                                                    .condition!.code!,
+                                                isDay: city
+                                                    .weather!.current!.isDay!,
+                                              )
+                                            : const Text("loading..."),
+                                        const SizedBox(
+                                          width: 8,
                                         ),
-                                        const Text(
-                                          "25",
-                                          style: TextStyle(
+                                        Text(
+                                          (city.weather != null)
+                                              ? "${city.weather!.current!.tempC}"
+                                              : "",
+                                          style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 14.5),
                                         )
@@ -332,7 +360,7 @@ class _MyDrawerState extends State<MyDrawer> {
 
   void navigateToCitySearchPage() {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return CitySearch();
+      return const CitySearch();
     }));
   }
 

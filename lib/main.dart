@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pweather/view/splash_screen.dart';
@@ -7,6 +8,10 @@ import '../Controller/feach_location.dart';
 import '../Model/whether_data.dart';
 import '../view/landing_page.dart';
 import 'Model/app_data.dart';
+
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -28,62 +33,58 @@ class MyApp2 extends StatefulWidget {
   State createState() => _MyApp2State();
 }
 
-// MyApp widget
-class _MyApp2State extends State {
-  // WhetherData? whetherData;
+class _MyApp2State extends State<MyApp2> {
   bool? isInstalled;
-  bool isLocationServiceEnabled = true;
+
   @override
   void initState() {
     super.initState();
-    _loadWeatherData();
-    _chechIsInstalled();
+    checkInstalled();
   }
 
-  void _chechIsInstalled() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey("isInstalled")) {
-      isInstalled = prefs.getBool("isInstalled")!;
-    } else {
-      isInstalled = false;
+  void checkInstalled() async {
+    isInstalled = await _checkIsInstalled();
+    setState(() {}); // Trigger a rebuild after the async operation
+
+    if (isInstalled == true) {
+      _loadWeatherData();
     }
-    setState(() {});
+  }
+
+  Future<bool> _checkIsInstalled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.containsKey("isInstalled");
   }
 
   Future<void> _loadWeatherData() async {
-    WhetherData? savedData = await FeachData.feachLocalWheatherInfo();
-    if (savedData != null) {
-      setState(() {
-        Data.whetherData = savedData;
-      });
-    }
-    Position? position;
     try {
-      position = await FeachLocation.determinePosition();
+      WhetherData? savedData = await FeachData.feachLocalWheatherInfo();
+      if (savedData != null) {
+        setState(() {
+          Data.whetherData = savedData;
+        });
+      }
+    
+      Position? position = await FeachLocation.determinePosition();
       Data.position = position;
-    } catch (e) {
-      isLocationServiceEnabled = false;
-    }
-    try {
-      WhetherData newData = await FeachData.feachWetherInfo(position!);
+
+      WhetherData newData = await FeachData.feachWetherInfo(position);
       setState(() {
         Data.whetherData = newData;
       });
-    } catch (e) {}
+    } catch (e) {
+      log("Error loading weather data: $e");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return (isInstalled != null)
-        ? (isInstalled!)
+        ? (isInstalled == true)
             ? const LandingPage()
             : const SplashScreen()
         : const Center(
             child: CircularProgressIndicator(),
           );
   }
-}
-
-void main() {
-  runApp(const MyApp());
 }

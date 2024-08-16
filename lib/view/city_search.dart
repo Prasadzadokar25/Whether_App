@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pweather/Model/app_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Controller/city_service.dart';
 import '../Controller/feach_location.dart';
 
@@ -18,7 +22,7 @@ class _CitySearchWidgetState extends State<CitySearch> {
   bool isMapShowed = true;
   List<Map<String, dynamic>>? options;
   Map<String, dynamic>? currentSelectedCity;
-  bool cityPopUpShowed = false;
+  bool iscityPopUpShowed = false;
 
   double? currentLatitude;
   double? currentLongitude;
@@ -156,7 +160,7 @@ class _CitySearchWidgetState extends State<CitySearch> {
                                         currentLatitude = option['latitude'];
                                         currentLongitude = option['longitude'];
                                         currentSelectedCity = option;
-                                        cityPopUpShowed = true;
+                                        iscityPopUpShowed = true;
 
                                         setState(() {
                                           isMapShowed = true;
@@ -211,21 +215,21 @@ class _CitySearchWidgetState extends State<CitySearch> {
                                             currentLatitude: currentLatitude!,
                                             currentLongitude: currentLongitude!,
                                           ),
-                                          if (cityPopUpShowed)
+                                          if (iscityPopUpShowed)
                                             Positioned(
-                                              top: screenHeight * 0.65,
+                                              top: screenHeight * 0.61,
                                               left: MediaQuery.of(context)
                                                       .size
                                                       .width *
-                                                  0.11,
+                                                  0.10,
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
-                                                  CityPopUp(
-                                                    cityDetails:
-                                                        currentSelectedCity!,
-                                                  ),
+                                                  cityPopUp(
+                                                      cityDetails:
+                                                          currentSelectedCity!,
+                                                      context: context),
                                                 ],
                                               ),
                                             )
@@ -245,23 +249,139 @@ class _CitySearchWidgetState extends State<CitySearch> {
     );
   }
 
-  void showCityAddDialogBox() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const AlertDialog(
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          title: Text("prasad"),
-        );
-      },
+  Widget cityPopUp(
+      {required Map<String, dynamic> cityDetails,
+      required BuildContext context}) {
+    return Container(
+      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+      width: MediaQuery.of(context).size.width * 0.80,
+      height: 150,
+      decoration: const BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    cityDetails["name"],
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 17,
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Text(
+                      "${cityDetails['region'] ?? 'Unknown Region'}, ${cityDetails['country'] ?? 'Unknown country'}",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 170, 170, 170),
+                          fontSize: 13),
+                    ),
+                  ),
+                  Text(
+                    DateTime.now().toString().substring(0, 16),
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 170, 170, 170),
+                        fontSize: 13),
+                  ),
+                ],
+              ),
+              const Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "26°",
+                    style:  TextStyle(
+                        color: Color.fromARGB(255, 255, 251, 251),
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    "30°/23°",
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 170, 170, 170),
+                        fontSize: 13),
+                  ),
+                ],
+              )
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              TextButton(
+                  onPressed: () {
+                    setState(() {
+                      iscityPopUpShowed = false;
+                    });
+                  },
+                  child: const Text(
+                    "Cancel",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  )),
+              TextButton(
+                  onPressed: () async {
+                    addCityInLocalStorage(cityDetails: cityDetails);
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    "Add",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ))
+            ],
+          )
+        ],
+      ),
     );
+  }
+
+  void addCityInLocalStorage(
+      {required Map<String, dynamic> cityDetails}) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey("citys")) {
+      String? localCityDataInString = prefs.getString("citys");
+      Map data = jsonDecode(localCityDataInString!);
+      data["citys"].add(cityDetails);
+      prefs.setString("citys", jsonEncode(data));
+      log(jsonEncode(data));
+    } else {
+      List cites = [cityDetails];
+      Map data = {"citys": cites};
+      prefs.setString("citys", jsonEncode(data));
+
+      log(jsonEncode(data));
+    }
   }
 }
 
 class MapSample extends StatelessWidget {
-  double currentLatitude;
-  double currentLongitude;
-  MapSample(
+ final double currentLatitude;
+  final double currentLongitude;
+ const MapSample(
       {super.key,
       required this.currentLatitude,
       required this.currentLongitude});
@@ -297,64 +417,6 @@ class MapSample extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-}
-
-class CityPopUp extends StatelessWidget {
-  final Map<String, dynamic> cityDetails;
-  const CityPopUp({super.key, required this.cityDetails});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      width: MediaQuery.of(context).size.width * 0.78,
-      height: 120,
-      decoration: const BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    cityDetails["name"],
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Text(
-                    "${cityDetails['region'] ?? 'Unknown Region'}, ${cityDetails['country'] ?? 'Unknown country'}",
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 170, 170, 170),
-                        fontSize: 13),
-                  ),
-                  Text(
-                    DateTime.now().toString().substring(0, 16),
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 170, 170, 170),
-                        fontSize: 13),
-                  ),
-                ],
-              ),
-              const Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [Text("26")],
-              )
-            ],
-          )
-        ],
-      ),
     );
   }
 }

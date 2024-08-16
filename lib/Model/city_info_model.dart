@@ -3,12 +3,10 @@ import 'package:pweather/Model/whether_data.dart';
 class Citys {
   List<City>? citys;
 
-  Citys({this.citys});
-
   Citys.fromJson(Map<dynamic, dynamic> json) {
-    if (json['data'] != null) {
+    if (json['citys'] != null) {
       citys = <City>[];
-      json['data'].forEach((v) {
+      json['citys'].forEach((v) {
         citys!.add(City.fromJson(v));
       });
     }
@@ -29,6 +27,7 @@ class City {
   double? latitude;
   double? longitude;
   int? population;
+  bool isSelected = false;
   WhetherData? weather;
 
   City.fromJson(Map<String, dynamic> json) {

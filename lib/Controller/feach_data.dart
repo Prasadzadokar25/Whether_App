@@ -20,7 +20,20 @@ class FeachData {
         "https://api.weatherapi.com/v1/forecast.json?key=${MyData.apiKey}&q=$latitude,$longitude&days=10&aqi=yes&alerts=yes";
     Uri uri = Uri.parse(wetherApiUrl);
     http.Response response = await http.get(uri);
-     log(response.body);
+    log(response.body);
+    storeCurrentWhetherData(response.body);
+
+    var responseData = json.decode(response.body);
+    return WhetherData.fromJson(responseData);
+  }
+
+  static Future<WhetherData> feachWetherInfoByLonLan(
+      {required double longitude, required double latitude}) async {
+    String wetherApiUrl =
+        "https://api.weatherapi.com/v1/forecast.json?key=${MyData.apiKey}&q=$latitude,$longitude&days=10&aqi=yes&alerts=yes";
+    Uri uri = Uri.parse(wetherApiUrl);
+    http.Response response = await http.get(uri);
+    log(response.body);
     storeCurrentWhetherData(response.body);
 
     var responseData = json.decode(response.body);
@@ -29,6 +42,7 @@ class FeachData {
 
   static Future<WhetherData?> feachLocalWheatherInfo() async {
     final prefs = await SharedPreferences.getInstance();
+
     if (prefs.containsKey("currentWhetherData")) {
       final localResponce = prefs.getString("currentWhetherData");
       var responseData = json.decode(localResponce!);
