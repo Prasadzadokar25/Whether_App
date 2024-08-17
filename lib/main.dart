@@ -44,11 +44,12 @@ class _MyApp2State extends State<MyApp2> {
 
   void checkInstalled() async {
     isInstalled = await _checkIsInstalled();
-    setState(() {}); // Trigger a rebuild after the async operation
-
+    // Trigger a rebuild after the async operation
+    setState(() {});
     if (isInstalled == true) {
       _loadWeatherData();
     }
+    setState(() {});
   }
 
   Future<bool> _checkIsInstalled() async {
@@ -64,7 +65,7 @@ class _MyApp2State extends State<MyApp2> {
           Data.whetherData = savedData;
         });
       }
-    
+
       Position? position = await FeachLocation.determinePosition();
       Data.position = position;
 

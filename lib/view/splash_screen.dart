@@ -22,7 +22,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     determinePosition();
-    _loadWeatherData();
   }
 
   Future<bool> determinePosition() async {
@@ -159,7 +158,38 @@ class _SplashScreenState extends State<SplashScreen> {
                 padding: const EdgeInsets.all(10),
                 child: GestureDetector(
                   onTap: () async {
+                    
                     if (await determinePosition()) {
+                      WhetherData? savedData =
+                          await FeachData.feachLocalWheatherInfo();
+                      if (savedData != null) {
+                        setState(() {
+                          Data.whetherData = savedData;
+                        });
+                      }
+
+                      Position? position;
+                      try {
+                        position = await FeachLocation.determinePosition();
+                        Data.position = position;
+                        isLocationServiceEnabled = true;
+                        final prefs = await SharedPreferences.getInstance();
+                        prefs.setString("citys",
+                            '{"citys":[{"id":1,"wikiDataId":"1","type":"CITY","userlocation":"My Location","name":"My Location","country":"na","countryCode":"na","region":"na","regionCode":"na","regionWdId":"1","latitude":${position.latitude},"longitude":${position.longitude},"population":0}]}');
+                        setState(() {});
+                      } catch (e) {
+                        showLocationErrorDialog(e.toString());
+                      }
+
+                      try {
+                        WhetherData newData =
+                            await FeachData.feachWetherInfo(position!);
+                        setState(() {
+                          Data.whetherData = newData;
+                        });
+                      } catch (e) {
+                        log("$e");
+                      }
                       navigateToLandingPage();
                       final prefs = await SharedPreferences.getInstance();
                       prefs.setBool("isInstalled", true);
@@ -244,7 +274,6 @@ class _SplashScreenState extends State<SplashScreen> {
           '{"citys":[{"id":1,"wikiDataId":"1","type":"CITY","userlocation":"My Location","name":"My Location","country":"na","countryCode":"na","region":"na","regionCode":"na","regionWdId":"1","latitude":${position.latitude},"longitude":${position.longitude},"population":0}]}');
       setState(() {});
     } catch (e) {
-      isLocationServiceEnabled = false;
       showLocationErrorDialog(e.toString());
     }
 

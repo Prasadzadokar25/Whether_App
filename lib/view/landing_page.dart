@@ -18,7 +18,7 @@ import '../Model/whether_data.dart';
 import '../view/home_screen.dart';
 import '../view/radar_view_android.dart';
 import 'navigation_bar.dart';
-import 'setting_page.dart';
+import 'weelky_weather.dart';
 import 'dart:convert';
 
 class LandingPage extends StatefulWidget {
@@ -34,19 +34,18 @@ class _LandingPageState extends State<LandingPage> {
 
   final List<Widget> _pages = [
     const HomeScreen(),
-    const SettingPage(),
+    const WeeklyReport(),
     const ThermalViewPage(),
   ];
   @override
   initState() {
     super.initState();
-    //_loadWeatherData();
   }
 
   @override
   Widget build(BuildContext context) {
     WhetherData? whetherData = Data.whetherData;
-   
+
     return (Data.whetherData != null)
         ? Scaffold(
             drawer: const Drawer(
@@ -105,7 +104,7 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                   FlashyTabBarItem(
                     icon: const Icon(Icons.event),
-                    title: const Text('7 days'),
+                    title: const Text('10 days'),
                   ),
                   FlashyTabBarItem(
                     icon: const Icon(Icons.satellite_alt),
@@ -194,7 +193,6 @@ class _MyDrawerState extends State<MyDrawer> {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
         Padding(
@@ -278,7 +276,7 @@ class _MyDrawerState extends State<MyDrawer> {
                                         ),
                                         Text(
                                           (city.weather != null)
-                                              ? "${city.weather!.current!.tempC}"
+                                              ? "${(city.weather!.current!.tempC).toString().substring(0, 3)}°"
                                               : "",
                                           style: const TextStyle(
                                               color: Colors.white,

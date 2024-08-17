@@ -34,7 +34,7 @@ class FeachData {
     Uri uri = Uri.parse(wetherApiUrl);
     http.Response response = await http.get(uri);
     log(response.body);
-    storeCurrentWhetherData(response.body);
+    // storeCurrentWhetherData(response.body);
 
     var responseData = json.decode(response.body);
     return WhetherData.fromJson(responseData);
