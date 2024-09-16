@@ -186,7 +186,7 @@ class _MyDrawerState extends State<MyDrawer> {
 
       log(jsonEncode(citysMap));
 
-      return Citys.fromJson(citysMap);
+      return Citys.fromJson(citysMap);  
     }
     return null;
   }
@@ -258,7 +258,7 @@ class _MyDrawerState extends State<MyDrawer> {
                                   ),
                                   trailing: SizedBox(
                                     height: 24,
-                                    width: 65,
+                                    width: 67,
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -276,7 +276,7 @@ class _MyDrawerState extends State<MyDrawer> {
                                         ),
                                         Text(
                                           (city.weather != null)
-                                              ? "${(city.weather!.current!.tempC).toString().substring(0, 3)}°"
+                                              ? "${(city.weather!.current!.tempC).toString().substring(0, 2)}°c"
                                               : "",
                                           style: const TextStyle(
                                               color: Colors.white,

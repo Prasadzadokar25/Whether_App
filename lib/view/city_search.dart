@@ -24,8 +24,8 @@ class _CitySearchWidgetState extends State<CitySearch> {
   Map<String, dynamic>? currentSelectedCity;
   bool iscityPopUpShowed = false;
 
-  double? currentLatitude;
-  double? currentLongitude;
+  double? currentLatitude = 18.519574;
+  double? currentLongitude = 73.855287;
 
   @override
   void initState() {
@@ -34,6 +34,9 @@ class _CitySearchWidgetState extends State<CitySearch> {
   }
 
   void feachUserLocation() async {
+    currentLatitude = Data.position!.latitude;
+    currentLongitude = Data.position!.longitude;
+    setState(() {});
     Data.position = await FeachLocation.determinePosition();
     currentLatitude = Data.position!.latitude;
     currentLongitude = Data.position!.longitude;
@@ -304,7 +307,7 @@ class _CitySearchWidgetState extends State<CitySearch> {
                 children: [
                   Text(
                     "26°",
-                    style:  TextStyle(
+                    style: TextStyle(
                         color: Color.fromARGB(255, 255, 251, 251),
                         fontSize: 24,
                         fontWeight: FontWeight.w600),
@@ -379,9 +382,9 @@ class _CitySearchWidgetState extends State<CitySearch> {
 }
 
 class MapSample extends StatelessWidget {
- final double currentLatitude;
+  final double currentLatitude;
   final double currentLongitude;
- const MapSample(
+  const MapSample(
       {super.key,
       required this.currentLatitude,
       required this.currentLongitude});
