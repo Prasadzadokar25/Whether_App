@@ -25,14 +25,14 @@ Scrolling animations: Weather icons and data transform dynamically during scroll
 Cloud movement: Visual effect showing cloud movement across the screen for a realistic weather experience.
 
 City Search with Auto-suggestion 🏙️
-
 Provides an easy search functionality where users can search for any city.
 Auto-suggest feature helps users find city names as they type.
 
 Getting Started
 Prerequisites
-Flutter: Ensure you have Flutter installed. Follow the Flutter installation guide if needed.
+Flutter: Ensure you have Flutter installed.
 
+Follow the Flutter installation guide if needed.
 Installation
 
 Clone this repository:
