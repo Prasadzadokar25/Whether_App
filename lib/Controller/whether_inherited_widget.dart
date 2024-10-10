@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import '../Model/whether_data.dart';
 
+// ignore: must_be_immutable
 class WhetherInheritedWidget extends InheritedWidget {
   WhetherData whetherData;
   WhetherInheritedWidget({

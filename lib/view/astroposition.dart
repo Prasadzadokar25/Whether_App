@@ -1,10 +1,6 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import '../Controller/whether_inherited_widget.dart';
+import 'package:pweather/Model/app_data.dart';
 import '../Model/imagepaths.dart';
-
-import 'whetheranimation.dart';
 
 class SunPositionScreen extends StatefulWidget {
   final DateTime sunrise;
@@ -36,8 +32,7 @@ class _SunPositionScreenState extends State<SunPositionScreen> {
   }
 
   double calculateSunPosition(DateTime sunrise, DateTime sunset) {
-    print(sunrise.toString());
-    print(sunset.toString());
+ 
     final now = DateTime.now();
     final totalDaylight = sunset.difference(sunrise).inMinutes;
     final passedTime = now.difference(sunrise).inMinutes;
@@ -193,12 +188,8 @@ class _MoonLocationState extends State<MoonLocation> {
             children: [
               getSunRiseSunSetLabel(
                 lable: "Moonrise",
-                time: WhetherInheritedWidget.of(context)
-                    .whetherData
-                    .forecast!
-                    .forecastday![0]
-                    .astro!
-                    .moonrise!,
+                time: Data
+                    .whetherData!.forecast!.forecastday![0].astro!.moonrise!,
               ),
               Column(
                 children: [
@@ -206,15 +197,11 @@ class _MoonLocationState extends State<MoonLocation> {
                     Paths.moon,
                     height: 55,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Text(
-                    WhetherInheritedWidget.of(context)
-                        .whetherData
-                        .forecast!
-                        .forecastday![0]
-                        .astro!
+                    Data.whetherData!.forecast!.forecastday![0].astro!
                         .moonPhase!,
                     style: const TextStyle(
                       fontSize: 12,
@@ -225,12 +212,8 @@ class _MoonLocationState extends State<MoonLocation> {
               ),
               getSunRiseSunSetLabel(
                 lable: "Moonset",
-                time: WhetherInheritedWidget.of(context)
-                    .whetherData
-                    .forecast!
-                    .forecastday![0]
-                    .astro!
-                    .moonset!,
+                time:
+                    Data.whetherData!.forecast!.forecastday![0].astro!.moonset!,
               ),
             ],
           ),
@@ -282,3 +265,6 @@ Widget getSunRiseSunSetLabel({required String lable, required String time}) {
     ],
   );
 }
+
+
+

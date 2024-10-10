@@ -21,14 +21,14 @@ class _MyWidgetState extends State<WeatherConditionIcon> {
       case >= 1000 && < 1002:
         return Image.asset('assets/images/0$isday-00-clear.png');
       case >= 1003 && < 1006:
-        return Image.network('assets/images/0$isday-01-partlycloudy.png');
+        return Image.asset('assets/images/0$isday-01-partlycloudy.png');
       case >= 1006 && < 1009:
         return Image.asset('assets/images/0$isday-03-cloudy.png');
       case >= 1009 && < 1030:
         return Image.asset('assets/images/0$isday-04-overcast.png');
-      case >= 1030 && < 1063:
+      case >= 1030 && <= 1063:
         return Image.asset('assets/images/0$isday-02-mist.png');
-      case == 1063:
+      case > 1063 && < 1066:
         return Image.asset('assets/images/0$isday-05-patchyrain.png');
       case == 1066:
         return Image.asset('assets/images/0$isday-06-patchsnow.png');
