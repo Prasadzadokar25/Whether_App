@@ -55,10 +55,17 @@ Sign up for a free API key from WeatherAPI or any other weather service.
 Add your API key to the api_key.dart file in the project:
 const String apiKey = 'YOUR_API_KEY';
 
-Screenshots
-Feature	Preview
-Home Screen	
-Radar View	
+# Weather App 🌦️
+
+A modern weather application built with **Flutter**...
+
+## Screenshots
+
+| Feature       | Preview                    |
+|---------------|----------------------------|
+| Home Screen   | ![Home](screenshots/page4.jpg) |
+| Radar View    | ![Radar](screenshots/page6.jpg) |
+
 
 Contributing
 Fork the repository.
