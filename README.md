@@ -63,8 +63,8 @@ A modern weather application built with **Flutter**...
 
 | Feature       | Preview                    |
 |---------------|----------------------------|
-| Home Screen   | ![Home](screenshots/page4.jpg) |
-| Radar View    | ![Radar](screenshots/page6.jpg) |
+| Home Screen   | ![Home](screenshots/page04.jpg) |
+| Radar View    | ![Radar](screenshots/page06.jpg) |
 
 
 Contributing
