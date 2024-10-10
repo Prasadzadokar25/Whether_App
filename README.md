@@ -4,7 +4,7 @@ A modern weather application built with Flutter, providing real-time weather upd
 
 Features
 
-Real-time Weather Data
+1. Real-time Weather Data
 Fetches up-to-date weather information from a reliable API.
 
 Displays the current weather, temperature, wind speed, humidity, and atmospheric pressure.
@@ -13,20 +13,22 @@ Visual representation of the temperature for the next 24 hours in an interactive
 Sun Position Effect 🌅
 Illustrates the sun's current position in the sky, showing the transition from sunrise to sunset.
 
-Radar Maps 🌍
+2. Radar Maps 🌍
 
 Temperature Map: Visualizes temperature variations across different regions.
 Wind Map: Shows wind patterns and speeds in real-time.
 Rain Map: Displays precipitation data, including intensity and movement of rain clouds.
 
-Animation Effects 🎞️
+3. Animation Effects 🎞️
 
 Scrolling animations: Weather icons and data transform dynamically during scrolling for smooth transitions.
 Cloud movement: Visual effect showing cloud movement across the screen for a realistic weather experience.
 
-City Search with Auto-suggestion 🏙️
+4. City Search with Auto-suggestion 🏙️
+
 Provides an easy search functionality where users can search for any city.
 Auto-suggest feature helps users find city names as they type.
+user can sesrch city from map also
 
 Getting Started
 Prerequisites
