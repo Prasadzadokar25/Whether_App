@@ -4,7 +4,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../Controller/whether_inherited_widget.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pweather/Model/app_data.dart';
 import 'package:pweather/Model/my_data.dart';
@@ -19,25 +18,8 @@ import '../Model/whether_data.dart';
 import '../view/home_screen.dart';
 import '../view/radar_view_android.dart';
 import 'navigation_bar.dart';
-import 'weatherconditionicon.dart';
-// import 'package:url_launcher/url_launcher.dart';
-
-/// Copyright (c) 2024 PDevelopment
-///
-/// This `LandingPage` widget serves as the main navigation interface,
-/// allowing users to switween different sections of the app using
-/// a bottom navigation bar. It includes the following features:
-///
-/// - Stateful Widget: Maintains its state and updates its UI dynamically.
-/// - Pages: Contains a list of different pages (Home, Search, Thermal View).
-/// - Selected Index: Keeps track of the currently selected tab.
-/// - Bottom Navigation Bar: Uses `FlashyTabBar` for navigation with four items (Home, Search, Events, Settings).
-/// - UI Customization: Customizes the `Scaffold` widget's background color and body extension.
-
-import 'dart:convert';
-
 import 'weelky_weather.dart';
-
+import 'dart:convert';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
