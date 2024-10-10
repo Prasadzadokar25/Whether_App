@@ -1,4 +1,4 @@
-## Weather App 🌦️
+# Weather App 🌦️
 
 A modern weather application built with Flutter, providing real-time weather updates, detailed forecasts, and radar views for various weather elements like temperature, wind, and rain. This app enhances the user experience with animations and graphical representations to visualize weather data effectively.
 
@@ -55,7 +55,6 @@ Sign up for a free API key from WeatherAPI or any other weather service.
 Add your API key to the api_key.dart file in the project:
 const String apiKey = 'YOUR_API_KEY';
 
-# Weather App 🌦️
 
 A modern weather application built with **Flutter**...
 
@@ -64,7 +63,7 @@ A modern weather application built with **Flutter**...
 | Feature       | Preview                    |
 |---------------|----------------------------|
 | Home Screen   | ![Home](screenshots/page04.jpg) |
-| Radar View    | ![Radar](screenshots/page06.jpg) |
+| Radar View    | ![Radar](screenshots/page08.jpg) |
 
 
 Contributing
